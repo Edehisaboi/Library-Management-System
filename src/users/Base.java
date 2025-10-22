@@ -1,5 +1,7 @@
 package users;
 
+import authentication.AccessLevel;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,6 +34,9 @@ public abstract class Base {
     }
     public String getPassword() {
         return password;
+    }
+    public AccessLevel getAccessLevel() {;
+        return AccessLevel.GUEST;
     }
 
     public void setFirstName(String firstName) {
