@@ -10,6 +10,6 @@ public interface UserRepository {
     void delete(Base user);
 
     boolean existsByEmail(String email);
-    boolean existsByEmailAndPassword(String email, String password);
+    Base existsByEmailAndPassword(String email, String password);
     Base findById(UUID id);
 }
