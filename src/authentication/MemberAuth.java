@@ -9,9 +9,11 @@ import users.Member;
 
 public class MemberAuth implements Authenticator {
     private final UserRepository repo;
+    private final UserSession session;
 
-    public MemberAuth(UserRepository repo) {
+    public MemberAuth(UserRepository repo, UserSession session) {
         this.repo = Objects.requireNonNull(repo, "UserRepository cannot be null");
+        this.session = Objects.requireNonNull(session, "UserSession cannot be null");
     }
 
     @Override
@@ -23,6 +25,7 @@ public class MemberAuth implements Authenticator {
         if (!(user instanceof Member)) {
             throw new AuthenticationException("Access denied! This account is not a member");
         }
+        session.setUser(user);
         return user;
     }
 
@@ -40,7 +43,7 @@ public class MemberAuth implements Authenticator {
 
     @Override
     public void logout(Base user) {
-        // todo: control state
-        Objects.requireNonNull(user, "User cannot be null");
+        //Objects.requireNonNull(user, "User cannot be null");
+        session.clear();
     }
 }

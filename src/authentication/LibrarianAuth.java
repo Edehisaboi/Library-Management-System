@@ -10,9 +10,11 @@ import users.Librarian;
 
 public class LibrarianAuth implements Authenticator {
     private final UserRepository repo;
+    private final UserSession session;
 
-    public LibrarianAuth(UserRepository repo) {
+    public LibrarianAuth(UserRepository repo, UserSession session) {
         this.repo = Objects.requireNonNull(repo, "UserRepository cannot be null");
+        this.session = Objects.requireNonNull(session, "UserSession cannot be null");
     }
 
     @Override
@@ -21,6 +23,10 @@ public class LibrarianAuth implements Authenticator {
         if (user == null) {
             throw new AuthenticationException("Invalid email or password!");
         }
+        if (!(user instanceof Librarian)) {
+            throw new AuthenticationException("Access denied! This account is not a librarian");
+        }
+        session.setUser(user);
         return user;
     }
 
@@ -37,7 +43,7 @@ public class LibrarianAuth implements Authenticator {
 
     @Override
     public void logout(Base user) {
-        // todo: control state
         Objects.requireNonNull(user, "User cannot be null");
+        session.clear();
     }
 }
