@@ -41,7 +41,6 @@ public class Librarian extends Base {
     public String toString() {
         return super.toString() + "\n"
              + "Role: " + getAccessLevel() + "\n"
-             + "Staff ID: " + getID() + "\n"
              + "Hire Date: " + hireDate + "\n"
              + "Active: " + active;
     }
