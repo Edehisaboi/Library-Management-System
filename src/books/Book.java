@@ -44,12 +44,12 @@ public final class Book {
         private UUID ID;
 
         private String title;
-        private List<String> authors;
+        private List<String> authors = new ArrayList<>();
         private String publisher;
         private int publicationYear;
         private String isbn;
 
-        private Set<Category> categories;
+        private Set<Category> categories = new HashSet<>();
 
         public Builder ID(UUID ID) {
             this.ID = ID;

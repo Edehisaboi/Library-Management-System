@@ -24,23 +24,23 @@ public class InMemoryBookRepository implements BookRepository {
                 .filter(b -> {
                     boolean ok = true;
 
-                    if (spec.titleLike.isPresent()) {
+                    if (spec.getTitleLike().isPresent()) {
                         ok &= b.getTitle().toLowerCase()
-                                .contains(spec.titleLike.get().toLowerCase());
+                                .contains(spec.getTitleLike().get().toLowerCase());
                     }
 
-                    if (spec.authorLike.isPresent()) {
-                        String authorQuery = spec.authorLike.get().toLowerCase();
+                    if (spec.getAuthorLike().isPresent()) {
+                        String authorQuery = spec.getAuthorLike().get().toLowerCase();
                         ok &= b.getAuthors().stream()
                                 .anyMatch(a -> a.toLowerCase().contains(authorQuery));
                     }
 
-                    if (spec.category.isPresent()) {
-                        ok &= b.getCategories().contains(spec.category.get());
+                    if (spec.getCategory().isPresent()) {
+                        ok &= b.getCategories().contains(spec.getCategory().get());
                     }
 
-                    if (spec.isbn.isPresent()) {
-                        String queryIsbn = spec.isbn.get().replaceAll("[-\\s]", "");
+                    if (spec.getIsbn().isPresent()) {
+                        String queryIsbn = spec.getIsbn().get().replaceAll("[-\\s]", "");
                         ok &= b.getIsbn().replaceAll("[-\\s]", "")
                                 .equalsIgnoreCase(queryIsbn);
                     }
