@@ -8,14 +8,19 @@ public class InMemoryBookRepository implements BookRepository {
     private final Map<UUID, BookCopy> copies = new HashMap<>();
 
     @Override
-    public Book save(Book book) { books.put(book.getID(), book); return book; }
+    public Book save(Book book) { books.put(book.getId(), book); return book; }
 
     @Override
     public Optional<Book> findById(UUID id) { return Optional.ofNullable(books.get(id)); }
 
     @Override
     public Optional<Book> findByIsbn(String isbn) {
-        return books.values().stream().filter(b -> b.getIsbn().equals(isbn)).findFirst();
+        if (isbn == null) return Optional.empty();
+        String q = isbn.replaceAll("[-\\s]", "");
+        return books.values().stream()
+            .filter(b -> b.getIsbn() != null &&
+                         b.getIsbn().replaceAll("[-\\s]", "").equalsIgnoreCase(q))
+            .findFirst();
     }
 
     @Override
@@ -24,15 +29,19 @@ public class InMemoryBookRepository implements BookRepository {
                 .filter(b -> {
                     boolean ok = true;
 
-                    if (spec.getTitleLike().isPresent()) {
-                        ok &= b.getTitle().toLowerCase()
-                                .contains(spec.getTitleLike().get().toLowerCase());
-                    }
+                    boolean hasTitle = spec.getTitleLike().isPresent();
+                    boolean hasAuthor = spec.getAuthorLike().isPresent();
 
-                    if (spec.getAuthorLike().isPresent()) {
-                        String authorQuery = spec.getAuthorLike().get().toLowerCase();
-                        ok &= b.getAuthors().stream()
-                                .anyMatch(a -> a.toLowerCase().contains(authorQuery));
+                    boolean titleMatch = !hasTitle || b.getTitle().toLowerCase()
+                            .contains(spec.getTitleLike().get().toLowerCase());
+
+                    boolean authorMatch = !hasAuthor || b.getAuthors().stream()
+                            .anyMatch(a -> a.toLowerCase().contains(spec.getAuthorLike().get().toLowerCase()));
+
+                    if (hasTitle && hasAuthor) {
+                        ok &= (titleMatch || authorMatch);
+                    } else {
+                        ok &= titleMatch && authorMatch;
                     }
 
                     if (spec.getCategory().isPresent()) {
@@ -40,9 +49,9 @@ public class InMemoryBookRepository implements BookRepository {
                     }
 
                     if (spec.getIsbn().isPresent()) {
-                        String queryIsbn = spec.getIsbn().get().replaceAll("[-\\s]", "");
-                        ok &= b.getIsbn().replaceAll("[-\\s]", "")
-                                .equalsIgnoreCase(queryIsbn);
+                        String qIsbn = spec.getIsbn().get().replaceAll("[-\\s]", "");
+                        String bIsbn = b.getIsbn() == null ? "" : b.getIsbn().replaceAll("[-\\s]", "");
+                        ok &= bIsbn.equalsIgnoreCase(qIsbn);
                     }
 
                     return ok;
