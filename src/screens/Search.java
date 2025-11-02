@@ -16,7 +16,6 @@ public class Search implements Screen {
 
     @Override
     public void display() {
-        System.out.println("================ Search for Books ================");
         String query = kbr.getString("Enter search query (title/author)");
 
         BookSearchSpec spec = BookSearchSpec.quick(query);
@@ -27,8 +26,8 @@ public class Search implements Screen {
             return;
         }
 
-        System.out.println("Found " + books.size() + " books:");
         for (Book book : books) {
+            System.out.println("*****************************************");
             System.out.println(book.toString());
         }
     }

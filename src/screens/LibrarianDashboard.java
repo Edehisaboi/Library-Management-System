@@ -40,7 +40,8 @@ public class LibrarianDashboard implements Screen {
                 case 1 -> System.out.println(librarian.toString());
                 case 2 -> manager.show("search");
                 case 3 -> manager.show("manageBooks");
-                case 4 -> {
+                case 4 -> System.out.println("Viewing members...");
+                case 5 -> {
                     librarianAuth.logout(librarian);
                     System.out.println("Logged out successfully!");
                     return;

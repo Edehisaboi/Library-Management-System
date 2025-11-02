@@ -40,8 +40,10 @@ public class MemberDashboard implements Screen {
             switch (choice) {
                 case 1 -> System.out.println(member.toString());
                 case 2 -> manager.show("search");
-                case 3 -> System.out.println("Displaying borrowed books...");
-                case 4 -> {
+                case 3 -> System.out.println("Borrowing a book...");
+                case 4 -> System.out.println("Returning a book...");
+                case 5 -> System.out.println("Borrowed books...");
+                case 6 -> {
                     memberAuth.logout(member);
                     System.out.println("Logged out successfully!");
                     return;
