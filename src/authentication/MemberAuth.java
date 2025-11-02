@@ -43,7 +43,7 @@ public class MemberAuth implements Authenticator {
 
     @Override
     public void logout(Base user) {
-        //Objects.requireNonNull(user, "User cannot be null");
+        Objects.requireNonNull(user, "User cannot be null");
         session.clear();
     }
 }

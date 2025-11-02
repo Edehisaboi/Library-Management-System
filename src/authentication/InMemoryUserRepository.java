@@ -35,7 +35,7 @@ public class InMemoryUserRepository implements UserRepository {
     public Base findById(UUID id) {
         return users.values()
                 .stream()
-                .filter(u -> u.getID().equals(id))
+                .filter(u -> u.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
