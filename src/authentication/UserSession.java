@@ -5,7 +5,6 @@ import users.Base;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-
 public class UserSession {
     private final AtomicReference<Base> currentUser = new AtomicReference<>();
 

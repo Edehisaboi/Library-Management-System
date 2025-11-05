@@ -4,7 +4,6 @@ import users.Base;
 
 import java.util.UUID;
 
-
 public interface UserRepository {
     Base save(Base user);
     void delete(Base user);

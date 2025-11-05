@@ -20,10 +20,10 @@ public class MemberAuth implements Authenticator {
     public Base login(String email, String password) throws AuthenticationException {
         Base user = repo.existsByEmailAndPassword(email, password);
         if (user == null) {
-            throw new AuthenticationException("Invalid email or password!");
+            throw new AuthenticationException("Invalid email or password.");
         }
         if (!(user instanceof Member)) {
-            throw new AuthenticationException("Access denied! This account is not a member");
+            throw new AuthenticationException("Access denied. Member account required.");
         }
         session.setUser(user);
         return user;
@@ -33,10 +33,8 @@ public class MemberAuth implements Authenticator {
     public Base register(String firstName, String lastName, String email, String password)
             throws AuthenticationException {
         if (repo.existsByEmail(email)) {
-            throw new AuthenticationException("An account with this email already exists!");
+            throw new AuthenticationException("An account with this email already exists.");
         }
-
-        // Default to a 1-Month membership;
         Member newUser = new Member(firstName, lastName, email, password, LocalDate.now().plusMonths(1));
         return repo.save(newUser);
     }
