@@ -45,21 +45,42 @@ public class KeyboardReader {
     }
 
     public String getString(String message) {
-        System.out.print(message + ": ");
-        return scanner.nextLine().trim();
+        return getString(message, false);
+    }
+
+    public String getString(String message, boolean allowBlank) {
+        while (true) {
+            System.out.print(message + ": ");
+            String input = scanner.nextLine();
+            if (allowBlank) return input;
+            String trimmed = input.trim();
+            if (!trimmed.isEmpty()) return trimmed;
+            System.out.println("Input cannot be blank.");
+        }
     }
 
     public String getString(String message, String mode, int length) {
-        String input;
+        return getString(message, mode, length, false);
+    }
+
+    public String getString(String message, String mode, int length, boolean allowBlank) {
         while (true) {
-            input = getString(message);
-            if (mode.equalsIgnoreCase("MAX") && input.length() > length) {
+            String input = getString(message, allowBlank);
+            String check = allowBlank ? input : input.trim();
+
+            if (mode.equalsIgnoreCase("MAX") && check.length() > length) {
                 System.out.printf("Input must not exceed %d characters.%n", length);
-            } else if (mode.equalsIgnoreCase("MIN") && input.length() < length) {
+            } else if (mode.equalsIgnoreCase("MIN") && check.length() < length) {
                 System.out.printf("Input must be at least %d characters.%n", length);
             } else {
-                return input;
+                return allowBlank ? input : check;
             }
         }
     }
+
+    public void pause(String prompt) {
+        System.out.print("\n" + (prompt == null || prompt.isBlank() ? "Press Enter to continue..." : prompt));
+        scanner.nextLine();
+    }
 }
+
