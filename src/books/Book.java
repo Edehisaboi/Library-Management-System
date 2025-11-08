@@ -1,7 +1,11 @@
 package books;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 public final class Book {
     private final UUID id;
@@ -27,6 +31,10 @@ public final class Book {
         this.publicationYear = publicationYear;
         this.isbn = isbn;
         this.categories = Set.copyOf(Objects.requireNonNull(categories, "Categories cannot be null!"));
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public UUID getId() {
@@ -57,11 +65,21 @@ public final class Book {
         return categories;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Override
+    public String toString() {
+        return "\n───────────────────────────────\n" +
+               " Title: " + title + "\n" +
+               "───────────────────────────────\n" +
+               " ID: " + id + "\n" +
+               " Authors: " + String.join(", ", authors) + "\n" +
+               " Publisher: " + publisher + "\n" +
+               " Year: " + publicationYear + "\n" +
+               " ISBN: " + isbn + "\n" +
+               " Categories: " + categories + "\n";
     }
 
     public static final class Builder {
+
         private String title;
         private final List<String> authors = new ArrayList<>();
         private String publisher;
@@ -76,7 +94,7 @@ public final class Book {
 
         public Builder addAuthor(String author) {
             if (author != null && !author.trim().isEmpty()) {
-                this.authors.add(author.trim());
+                authors.add(author.trim());
             }
             return this;
         }
@@ -98,7 +116,7 @@ public final class Book {
 
         public Builder addCategory(Category category) {
             if (category != null) {
-                this.categories.add(category);
+                categories.add(category);
             }
             return this;
         }
@@ -106,17 +124,5 @@ public final class Book {
         public Book build() {
             return new Book(title, authors, publisher, publicationYear, isbn, categories);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Book Details:" +
-               "\nID: " + id +
-               "\nTitle: " + title +
-               "\nAuthors: " + String.join(", ", authors) +
-               "\nPublisher: " + publisher +
-               "\nPublication Year: " + publicationYear +
-               "\nISBN: " + isbn +
-               "\nCategories: " + categories;
     }
 }

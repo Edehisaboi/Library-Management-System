@@ -2,12 +2,18 @@ package books;
 
 import users.Member;
 
-import java.util.*;
 import java.time.LocalDate;
-import java.util.stream.Collectors;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
-public class BookService {
+public final class BookService {
     private final BookRepository bookRepo;
     private final int defaultNewCopiesPerTitle;
 
@@ -15,18 +21,25 @@ public class BookService {
     private final Map<UUID, Integer> availableCopiesCache = new ConcurrentHashMap<>();
 
     public BookService(BookRepository repo, int defaultNewCopies) {
-        this.bookRepo = Objects.requireNonNull(repo);
+        this.bookRepo = Objects.requireNonNull(repo, "Book repository is required!");
         this.defaultNewCopiesPerTitle = defaultNewCopies;
     }
 
     public Book addNewTitle(Book book, int initialCopies) {
-        bookRepo.findByIsbn(book.getIsbn()).ifPresent(b -> {
-            throw new IllegalArgumentException("ISBN already exists: " + b.getIsbn());
-        });
-        Book saved = bookRepo.save(book);
-        for (int i = 0; i < Math.max(0, initialCopies); i++) bookRepo.addCopy(saved.getId());
+        Objects.requireNonNull(book, "Book is required!");
 
-        availableCopiesCache.put(saved.getId(), initialCopies);
+        bookRepo.findByIsbn(book.getIsbn()).ifPresent(existing -> {
+            throw new IllegalArgumentException("ISBN already exists: " + existing.getIsbn());
+        });
+
+        Book saved = bookRepo.save(book);
+        int copiesToCreate = Math.max(0, initialCopies);
+
+        for (int i = 0; i < copiesToCreate; i++) {
+            bookRepo.addCopy(saved.getId());
+        }
+
+        availableCopiesCache.put(saved.getId(), computeAvailableCopies(saved.getId()));
         return saved;
     }
 
@@ -35,13 +48,21 @@ public class BookService {
     }
 
     public List<Book> search(BookSearchSpec spec) {
-        return bookRepo.search(spec == null ? BookSearchSpec.builder().build() : spec);
+        BookSearchSpec effectiveSpec = spec == null ? BookSearchSpec.builder().build() : spec;
+        return bookRepo.search(effectiveSpec);
     }
 
     public BookCopy markCopyStatus(UUID copyId, Status status) {
-        BookCopy copy = bookRepo.findCopyById(copyId).orElseThrow();
+        Objects.requireNonNull(copyId, "Copy ID required!");
+        Objects.requireNonNull(status, "Status required!");
+
+        BookCopy copy = bookRepo.findCopyById(copyId)
+                .orElseThrow(() -> new NoSuchElementException("Copy not found: " + copyId));
+
         copy.setStatus(status);
         bookRepo.updateCopy(copy);
+
+        availableCopiesCache.put(copy.getBookId(), computeAvailableCopies(copy.getBookId()));
         return copy;
     }
 
@@ -53,10 +74,10 @@ public class BookService {
             throw new IllegalStateException("Member cannot borrow! Borrow limit reached or membership expired.");
         }
 
-        if (
-                member.getBorrowedBooks().stream()
-                        .anyMatch(copy -> copy.getBookId().equals(bookId))
-        ) {
+        boolean alreadyHasCopy = member.getBorrowedBooks().stream()
+                .anyMatch(copy -> copy.getBookId().equals(bookId));
+
+        if (alreadyHasCopy) {
             throw new IllegalStateException("Member already has a copy of this book!");
         }
 
@@ -67,8 +88,12 @@ public class BookService {
         }
 
         List<BookCopy> copies = bookRepo.findCopiesByBookId(bookId);
+
         BookCopy chosenCopy = copies.stream()
-                .filter(c -> c.getStatus() == Status.AVAILABLE && !activeBorrows.containsKey(c.getCopyId()))
+                .filter(copy ->
+                        copy.getStatus() == Status.AVAILABLE
+                                && !activeBorrows.containsKey(copy.getCopyId())
+                )
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("No available copies found!"));
 
@@ -76,57 +101,95 @@ public class BookService {
             throw new IllegalStateException("Member cannot borrow this book!");
         }
 
-        ActiveBorrow borrow = new ActiveBorrow(bookId, chosenCopy.getCopyId(), member.getId(), LocalDate.now(), LocalDate.now().plusDays(days));
+        markCopyStatus(chosenCopy.getCopyId(), Status.BORROWED);
+
+        LocalDate borrowDate = LocalDate.now();
+        LocalDate dueDate = borrowDate.plusDays(days);
+
+        ActiveBorrow borrow = new ActiveBorrow(
+                bookId,
+                chosenCopy.getCopyId(),
+                member.getId(),
+                borrowDate,
+                dueDate
+        );
 
         activeBorrows.put(chosenCopy.getCopyId(), borrow);
-        availableCopiesCache.put(bookId, availableCopiesCache.getOrDefault(bookId, 0) - 1);
+        availableCopiesCache.put(bookId, computeAvailableCopies(bookId));
 
         return borrow;
     }
 
-    public synchronized  boolean returnCopy(UUID copyId, Member member) {
+    public synchronized boolean returnCopy(UUID copyId, Member member) {
         Objects.requireNonNull(copyId, "Copy ID required!");
         Objects.requireNonNull(member, "Member required!");
 
         ActiveBorrow borrow = activeBorrows.get(copyId);
-        if (borrow == null) return false;
-        if (!borrow.memberId().equals(member.getId())){
+        if (borrow == null) {
+            return false;
+        }
+
+        if (!borrow.memberId().equals(member.getId())) {
             throw new IllegalStateException("Only the borrower can return this copy!");
         }
 
         BookCopy copy = bookRepo.findCopyById(copyId)
-                        .orElseThrow(() -> new IllegalStateException("Copy not found!"));
+                .orElseThrow(() -> new IllegalStateException("Copy not found!"));
 
-        boolean returnedCopy = member.returnBook(copy);
+        boolean returned = member.returnBook(copy);
+
+        markCopyStatus(copyId, Status.AVAILABLE);
 
         activeBorrows.remove(copyId);
-        availableCopiesCache.merge(copy.getBookId(), 1, Integer::sum);
+        availableCopiesCache.put(copy.getBookId(), computeAvailableCopies(copy.getBookId()));
 
-        return returnedCopy;
+        return returned;
     }
 
     public int availableCopies(UUID bookId) {
+        Objects.requireNonNull(bookId, "Book ID required!");
         ensureAvailabilityInitialized(bookId);
         return Math.max(0, availableCopiesCache.getOrDefault(bookId, 0));
     }
 
     public List<ActiveBorrow> borrowsByMember(UUID memberId) {
         Objects.requireNonNull(memberId, "Member ID required!");
+
         return activeBorrows.values().stream()
-                .filter(b -> b.memberId().equals(memberId))
+                .filter(borrow -> borrow.memberId().equals(memberId))
                 .sorted(Comparator.comparing(ActiveBorrow::dueDate))
                 .collect(Collectors.toList());
     }
 
     public boolean isCopyBorrowed(UUID copyId) {
+        Objects.requireNonNull(copyId, "Copy ID required!");
         return activeBorrows.containsKey(copyId);
     }
 
+    public Optional<Book> findBookById(UUID id) {
+        Objects.requireNonNull(id, "Book ID required!");
+        return bookRepo.findById(id);
+    }
+
+    public Optional<ActiveBorrow> findBorrowByCopyId(UUID copyId) {
+        Objects.requireNonNull(copyId, "Copy ID required!");
+        return Optional.ofNullable(activeBorrows.get(copyId));
+    }
+
     private void ensureAvailabilityInitialized(UUID bookId) {
-        availableCopiesCache.computeIfAbsent(bookId, id -> {
-            List<BookCopy> copies = bookRepo.findCopiesByBookId(id);
-            long out = copies.stream().filter(c -> activeBorrows.containsKey(c.getCopyId())).count();
-            return Math.max(0, copies.size() - (int) out);
-        });
+        availableCopiesCache.computeIfAbsent(bookId, this::computeAvailableCopies);
+    }
+
+    private int computeAvailableCopies(UUID bookId) {
+        List<BookCopy> copies = bookRepo.findCopiesByBookId(bookId);
+
+        long available = copies.stream()
+                .filter(copy ->
+                        copy.getStatus() == Status.AVAILABLE
+                                && !activeBorrows.containsKey(copy.getCopyId())
+                )
+                .count();
+
+        return (int) Math.max(0, available);
     }
 }

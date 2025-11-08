@@ -2,7 +2,6 @@ package books;
 
 import java.util.Optional;
 
-
 public final class BookSearchSpec {
     private final String titleLike;
     private final String authorLike;
@@ -54,23 +53,23 @@ public final class BookSearchSpec {
         private String isbn;
         private Category category;
 
-        public Builder titleLike(String s) {
-            this.titleLike = isBlank(s) ? null : s;
+        public Builder titleLike(String value) {
+            this.titleLike = isBlank(value) ? null : value;
             return this;
         }
 
-        public Builder authorLike(String s) {
-            this.authorLike = isBlank(s) ? null : s;
+        public Builder authorLike(String value) {
+            this.authorLike = isBlank(value) ? null : value;
             return this;
         }
 
-        public Builder category(Category c) {
-            this.category = c;
+        public Builder category(Category value) {
+            this.category = value;
             return this;
         }
 
-        public Builder isbn(String s) {
-            this.isbn = isBlank(s) ? null : s;
+        public Builder isbn(String value) {
+            this.isbn = isBlank(value) ? null : value;
             return this;
         }
 
@@ -78,8 +77,8 @@ public final class BookSearchSpec {
             return new BookSearchSpec(titleLike, authorLike, category, isbn);
         }
 
-        private static boolean isBlank(String s) {
-            return s == null || s.trim().isEmpty();
+        private static boolean isBlank(String value) {
+            return value == null || value.trim().isEmpty();
         }
     }
 }
