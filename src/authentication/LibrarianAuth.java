@@ -1,47 +1,50 @@
 package authentication;
 
-import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Optional;
 import javax.naming.AuthenticationException;
 
-import users.Base;
-import users.Librarian;
+import domain.user.User;
+import domain.user.Librarian;
+import repo.UserRepository;
 
 public class LibrarianAuth implements Authenticator {
     private final UserRepository repo;
-    private final UserSession session;
+    private final UserSession state;
 
-    public LibrarianAuth(UserRepository repo, UserSession session) {
+    public LibrarianAuth(UserRepository repo, UserSession state) {
         this.repo = Objects.requireNonNull(repo, "UserRepository cannot be null");
-        this.session = Objects.requireNonNull(session, "UserSession cannot be null");
+        this.state = Objects.requireNonNull(state, "UserState cannot be null");
     }
 
     @Override
-    public Base login(String email, String password) throws AuthenticationException {
-        Base user = repo.existsByEmailAndPassword(email, password);
-        if (user == null) {
+    public User login(String email, String password) throws AuthenticationException {
+        Optional<User> user = repo.existsByEmailAndPassword(email, password);
+        if (user.isEmpty()) {
             throw new AuthenticationException("Invalid email or password.");
         }
-        if (!(user instanceof Librarian)) {
+        User librarian = user.get();
+
+        if (!(librarian instanceof Librarian)) {
             throw new AuthenticationException("Access denied. Librarian account required.");
         }
-        session.setUser(user);
-        return user;
+        state.login(librarian);
+        return librarian;
     }
 
     @Override
-    public Base register(String firstName, String lastName, String email, String password)
+    public User register(String firstName, String lastName, String email, String password)
             throws AuthenticationException {
         if (repo.existsByEmail(email)) {
             throw new AuthenticationException("An account with this email already exists.");
         }
-        Librarian newUser = new Librarian(firstName, lastName, email, password, LocalDate.now());
-        return repo.save(newUser);
+        Librarian newLibrarian = new Librarian(firstName, lastName, email, password);
+        return repo.save(newLibrarian);
     }
 
     @Override
-    public void logout(Base user) {
-        Objects.requireNonNull(user, "User cannot be null");
-        session.clear();
+    public void logout(User librarian) {
+        Objects.requireNonNull(librarian, "Librarian cannot be null");
+        state.logout();
     }
 }

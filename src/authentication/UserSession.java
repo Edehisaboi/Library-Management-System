@@ -1,26 +1,16 @@
 package authentication;
 
-import users.Base;
-
+import domain.user.User;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
-public class UserSession {
-    private final AtomicReference<Base> currentUser = new AtomicReference<>();
+public interface UserSession {
+    Optional<User> getCurrentUser();
 
-    public Optional<Base> getCurrentUser() {
-        return Optional.ofNullable(currentUser.get());
-    }
+    void login(User user);
 
-    public void setUser(Base user) {
-        currentUser.set(user);
-    }
+    void logout();
 
-    public void clear() {
-        currentUser.set(null);
-    }
+    boolean isLoggedIn();
 
-    public boolean isAuthenticated() {
-        return currentUser.get() != null;
-    }
+    User requireLoggedIn();
 }

@@ -1,47 +1,49 @@
 package authentication;
 
-import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Optional;
 import javax.naming.AuthenticationException;
 
-import users.Base;
-import users.Member;
+import domain.user.User;
+import domain.user.Member;
+import repo.UserRepository;
 
 public class MemberAuth implements Authenticator {
     private final UserRepository repo;
-    private final UserSession session;
+    private final UserSession state;
 
-    public MemberAuth(UserRepository repo, UserSession session) {
+    public MemberAuth(UserRepository repo, UserSession state) {
         this.repo = Objects.requireNonNull(repo, "UserRepository cannot be null");
-        this.session = Objects.requireNonNull(session, "UserSession cannot be null");
+        this.state = Objects.requireNonNull(state, "UserState cannot be null");
     }
 
     @Override
-    public Base login(String email, String password) throws AuthenticationException {
-        Base user = repo.existsByEmailAndPassword(email, password);
-        if (user == null) {
+    public User login(String email, String password) throws AuthenticationException {
+        Optional<User> user = repo.existsByEmailAndPassword(email, password);
+        if (user.isEmpty()) {
             throw new AuthenticationException("Invalid email or password.");
         }
-        if (!(user instanceof Member)) {
+        User member = user.get();
+        if (!(member instanceof Member)) {
             throw new AuthenticationException("Access denied. Member account required.");
         }
-        session.setUser(user);
-        return user;
+        state.login(member);
+        return member;
     }
 
     @Override
-    public Base register(String firstName, String lastName, String email, String password)
+    public User register(String firstName, String lastName, String email, String password)
             throws AuthenticationException {
         if (repo.existsByEmail(email)) {
             throw new AuthenticationException("An account with this email already exists.");
         }
-        Member newUser = new Member(firstName, lastName, email, password, LocalDate.now().plusMonths(1));
-        return repo.save(newUser);
+        Member newMember = new Member(firstName, lastName, email, password);
+        return repo.save(newMember);
     }
 
     @Override
-    public void logout(Base user) {
-        Objects.requireNonNull(user, "User cannot be null");
-        session.clear();
+    public void logout(User member) {
+        Objects.requireNonNull(member, "Member cannot be null");
+        state.logout();
     }
 }

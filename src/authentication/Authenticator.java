@@ -1,10 +1,12 @@
 package authentication;
 
-import users.Base;
+import domain.user.User;
 import javax.naming.AuthenticationException;
 
 public interface Authenticator {
-    Base login(String email, String password) throws AuthenticationException;
-    Base register(String firstName, String lastName, String email, String password) throws AuthenticationException;
-    void logout(Base user);
+    User login(String email, String password) throws AuthenticationException;
+
+    User register(String firstName, String lastName, String email, String password) throws AuthenticationException;
+
+    void logout(User user);
 }
