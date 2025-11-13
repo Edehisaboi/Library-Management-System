@@ -1,0 +1,13 @@
+package cli;
+
+public enum ScreenId {
+    MAIN,
+    SEARCH_MEDIA,
+    MEMBER_DASHBOARD,
+    LIBRARIAN_DASHBOARD,
+    GUEST_DASHBOARD,
+    LOGIN,
+    REGISTER,
+    BORROW_BOOK,
+    RETURN_BOOK
+}
