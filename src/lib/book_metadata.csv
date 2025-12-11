@@ -1,101 +1,51 @@
-Title,authors,publisher,publicationYear,isbn,categories
-Golden River 2,Noah Williams,Blue Harbor Press,2019,978-1-9600-1338-9,HORROR
-Hidden Bridge,"Logan Anderson, Drew Thomas",Evercrest Books,1985,978-0-2654-2351-1,"HISTORY, ROMANCE"
-Digital Empire,Cameron Clark,Northbridge Press,2008,978-8-1618-4959-3,"FINANCE, HEALTH, NONFICTION"
-Silent City 7,Taylor Lewis,Crescent Books,1962,978-6-4752-5534-1,"BIOGRAPHY, HEALTH"
-Glass Clock,Parker Wilson,Maple Leaf Media,2021,978-3-5030-5641-3,SCIENCE_FICTION
-Velvet Theory,Ava Walker,Blue Harbor Press,2008,978-2-4238-8496-9,BIOGRAPHY
-Digital Script,"Reese Taylor, Taylor Sanchez, Jordan Lewis",Lakeside Publishing,1969,978-2-6916-6978-4,"ART, FICTION"
-Fractured River 1,"Logan Sanchez, Cameron Sanchez",Blue Harbor Press,1993,978-1-4627-0482-8,"HORROR, PSYCHOLOGY, YOUNG_ADULT"
-Golden Voyage 5,"Casey Gonzalez, Liam Garcia",Stonegate Publishing,2017,978-0-9570-1543-0,"FICTION, HORROR"
-Secret Tide 1,"Olivia Brown, Liam Jackson",Willow & Co,1966,978-2-7824-8963-8,COMPUTING
-Lost Voyage,"Quinn Thomas, Ava Moore",Meridian Press,1965,978-3-3150-9839-3,NONFICTION
-Hidden Door 1,Ava Johnson,Beacon Ridge Media,1992,978-1-8347-3829-9,SCIENCE_FICTION
-Shadow Algorithm 7,Morgan Williams,Blue Harbor Press,2005,978-5-6670-1065-1,SOCIAL_SCIENCE
-Secret Forest,Skyler Garcia,Maple Leaf Media,2009,978-3-1781-0801-3,SOCIAL_SCIENCE
-Brave Memory,Rowan Robinson,Northbridge Press,1971,978-6-0647-4687-2,"EDUCATION, HISTORY"
-Lost Voyage,Noah Jackson,Northbridge Press,1990,978-0-0978-8208-1,"NONFICTION, YOUNG_ADULT"
-Brave Door,"Drew Wilson, Morgan Robinson",Evercrest Books,1981,978-9-9091-6998-5,SELF_HELP
-Broken Forest 3,Rowan Jones,Blue Harbor Press,1988,978-7-5107-9911-8,"ATHLETICS, COOKING, DRAMA"
-Lost Atlas,"Ava Brown, Ava Davis, Quinn Hernandez",Hearth & Quill,2006,978-8-4980-8412-4,"POETRY, TRAVEL"
-Golden Empire 2,Sage Miller,Ironwood Publishers,1993,978-3-4874-0164-0,"FICTION, FINANCE, PSYCHOLOGY"
-Hidden Theory 6,"Riley Harris, Parker Jackson, Sam Anderson",Stonegate Publishing,1951,978-1-1280-5982-6,"SELF_HELP, TECHNOLOGY"
-Lonely City,"Mia Lewis, Jordan Robinson",Silverline House,1976,978-3-1586-9232-2,"MYSTERY, TRAVEL"
-Crimson River,"Mia Walker, Skyler Clark, Charlie Lewis",Ironwood Publishers,1981,978-4-2160-7337-5,"COOKING, PSYCHOLOGY"
-Burning Algorithm,"Rowan Lopez, Cameron Lewis",Lakeside Publishing,1985,978-5-8685-0142-9,"TECHNOLOGY, THRILLER"
-Broken City,Noah Clark,Silverline House,2005,978-9-8169-3406-0,NONFICTION
-Radiant Bridge 6,"Jamie Gonzalez, Skyler Brown",Blue Harbor Press,1992,978-9-5148-4656-4,"ART, CHILDREN, MYSTERY"
-Fractured Promise,"Rowan Thompson, Noah Robinson",Hearth & Quill,2022,978-4-6804-4369-9,"EDUCATION, SOCIAL_SCIENCE, THRILLER"
-Wandering Light,"Reese Taylor, Mia Robinson",Willow & Co,1971,978-1-4895-1343-3,BIOGRAPHY
-Lonely River,"Sage Lewis, Liam Brown, Parker Anderson",Oakshore Press,2023,978-3-6763-2016-3,FINANCE
-Brave Atlas,Isabella Lewis,Lakeside Publishing,2008,978-2-7889-5798-6,"CHILDREN, COMPUTING, FINANCE"
-Fractured Light 6,"Parker Martinez, Liam Davis",Beacon Ridge Media,1985,978-8-7347-1434-5,"BIOGRAPHY, FICTION"
-Wandering Bridge,Rowan White,Hearth & Quill,1977,978-1-6658-7603-6,HORROR
-Digital Tide 1,"Liam Martin, Rowan Taylor",Northbridge Press,1995,978-4-6688-9373-4,"BUSINESS, FICTION, PSYCHOLOGY"
-Crimson House,Charlie Clark,Aurora Editions,1971,978-7-2980-6990-1,SPORTS
-Crimson Promise 2,Rowan Lopez,Crescent Books,2008,978-5-5646-4170-8,"CHILDREN, SELF_HELP"
-Ancient Script,Elliot Johnson,Willow & Co,1953,978-3-3092-3271-9,"GEOGRAPHY, MYSTERY, NONFICTION"
-Lost Light 7,Sage Lee,Ironwood Publishers,1964,978-2-4190-4966-3,"CHILDREN, MYSTERY, YOUNG_ADULT"
-Silent Tide 6,Sam Sanchez,Maple Leaf Media,1965,978-9-0586-5185-0,EDUCATION
-Crimson House,"Elliot Robinson, Olivia Thomas, Sam Jones",Aurora Editions,1972,978-8-4987-7694-5,"COMPUTING, PHILOSOPHY, SCIENCE_FICTION"
-Secret Door,Liam Thomas,Evercrest Books,1998,978-5-0752-7354-5,COMPUTING
-Broken Portrait 3,Reese Miller,Lakeside Publishing,1980,978-6-7837-7701-4,SCIENCE_FICTION
-Secret Machine 3,"Quinn Taylor, Logan Moore",Silverline House,2004,978-8-5574-4431-3,"FICTION, HISTORY"
-Wandering Empire 7,"Jamie Miller, Noah Taylor",Maple Leaf Media,2025,978-8-9413-4352-4,"HISTORY, THRILLER"
-Hidden Bridge,Jordan Jackson,Maple Leaf Media,1966,978-7-1094-7775-2,"FICTION, MYSTERY, TECHNOLOGY"
-Ancient Garden 4,Taylor Wilson,Meridian Press,1959,978-9-0229-4131-8,HORROR
-Crimson Portrait,"Liam Moore, Rowan Thomas",Oakshore Press,2006,978-4-9649-9091-3,"FANTASY, HORROR"
-Lost Garden 2,Logan Brown,Hearth & Quill,1950,978-6-7974-0344-7,PSYCHOLOGY
-Silent Algorithm 7,"Kai Thompson, Mia Walker",Crescent Books,2004,978-1-8324-2102-4,PHILOSOPHY
-Glass Tide 4,Sam Hernandez,Ironwood Publishers,2001,978-4-8877-1906-5,PHILOSOPHY
-Glass Garden,Charlie Ramirez,Beacon Ridge Media,2023,978-9-0490-2787-4,"FICTION, FINANCE"
-Brave Tide,"Taylor Taylor, Quinn Anderson",Silverline House,1991,978-1-2567-4680-7,"EDUCATION, HISTORY, NONFICTION"
-Silent Theory,Liam Wilson,Beacon Ridge Media,2015,978-0-8760-3859-7,"BIOGRAPHY, TECHNOLOGY"
-Forgotten City,Isabella Hernandez,Meridian Press,2012,978-1-0932-4808-6,MYSTERY
-Silent Algorithm 1,Morgan Perez,Beacon Ridge Media,1969,978-7-4846-7737-8,"ART, PSYCHOLOGY"
-Lonely Machine,Noah Robinson,Hearth & Quill,1958,978-4-6584-0449-9,"FANTASY, HEALTH, HORROR"
-Shadow Promise,Harper Jackson,Willow & Co,2019,978-6-7533-9636-0,"BUSINESS, THRILLER"
-Wandering House 7,Charlie Clark,Beacon Ridge Media,1969,978-7-0289-5171-8,HORROR
-Forgotten River 4,"Casey Brown, Blake Clark",Maple Leaf Media,1993,978-9-6158-6578-0,"MYSTERY, NONFICTION, YOUNG_ADULT"
-Glass Door,"Avery Davis, Noah Brown",Aurora Editions,1962,978-1-7240-0504-5,"GEOGRAPHY, PHILOSOPHY"
-Electric Memory,Kai Thompson,Willow & Co,1973,978-2-2196-9379-2,MYSTERY
-Secret Light 4,Alex Robinson,Willow & Co,2009,978-4-8217-5946-4,"GEOGRAPHY, YOUNG_ADULT"
-Forgotten Voyage,Blake Williams,Crescent Books,1998,978-9-5944-0640-9,"BUSINESS, PHILOSOPHY, SCIENCE_FICTION"
-Ancient Portrait 7,"Avery Sanchez, Mia Davis, Sage Clark",Silverline House,1978,978-3-9421-0470-9,"MYSTERY, ROMANCE, SELF_HELP"
-Electric Promise,Noah Anderson,Hearth & Quill,1975,978-2-8588-4247-4,POETRY
-Wandering Empire,Liam Davis,Beacon Ridge Media,2000,978-8-5160-4817-5,NONFICTION
-Broken Tide,"Quinn Williams, Charlie Davis",Meridian Press,1953,978-9-8593-1746-1,"COMPUTING, THRILLER"
-Lonely City 3,"Morgan Williams, Drew Robinson, Logan Jones",Aurora Editions,2008,978-5-8692-6179-6,COMPUTING
-Broken City 2,Drew Lewis,Silverline House,1962,978-5-8506-4317-1,"CHILDREN, FANTASY, THRILLER"
-Lost Portrait 1,"Drew Jones, Mia Martin",Crescent Books,1958,978-8-3933-5290-4,"TECHNOLOGY, TRAVEL"
-Lonely Promise,"Morgan Thompson, Emma Smith",Hearth & Quill,1951,978-5-3950-2402-6,"ART, SELF_HELP"
-Radiant Empire 4,Quinn Moore,Evercrest Books,1963,978-7-8390-8470-0,SELF_HELP
-Shadow Machine,Sam Walker,Meridian Press,1959,978-1-5921-2499-8,"BIOGRAPHY, SCIENCE_FICTION"
-Wandering Machine 5,Reese Lee,Aurora Editions,1962,978-1-8367-3657-6,"CHILDREN, PHILOSOPHY"
-Crimson Empire,Cameron Gonzalez,Hearth & Quill,2010,978-1-1116-1528-0,PSYCHOLOGY
-Velvet Bridge,"Skyler Gonzalez, Emma Thompson",Willow & Co,2004,978-0-4945-1983-2,"HISTORY, HORROR"
-Shadow Algorithm 3,"Quinn Williams, Liam Martinez",Evercrest Books,1978,978-6-8998-0940-2,"ATHLETICS, PSYCHOLOGY, SPORTS"
-Broken Voyage 3,Emma Jones,Evercrest Books,2001,978-1-2018-3667-5,FINANCE
-Brave Script,Kai Lee,Lakeside Publishing,1956,978-2-2901-4767-9,SELF_HELP
-Forgotten Memory,"Morgan Gonzalez, Skyler Williams",Maple Leaf Media,2025,978-7-8403-6900-3,ATHLETICS
-Burning Forest 7,Harper Williams,Northbridge Press,2013,978-6-2268-3885-1,"PSYCHOLOGY, YOUNG_ADULT"
-Digital City,Taylor Lewis,Silverline House,2023,978-6-9664-1605-2,"ATHLETICS, HISTORY, POETRY"
-Glass Light 3,Emma Williams,Crescent Books,2005,978-9-6816-4535-2,DRAMA
-Silent Atlas 5,Ava Sanchez,Silverline House,1994,978-2-3124-3292-1,BIOGRAPHY
-Brave House,Kai Thomas,Blue Harbor Press,2022,978-9-5527-1774-4,"SCIENCE_FICTION, SOCIAL_SCIENCE"
-Velvet City,Parker Thomas,Northbridge Press,1957,978-5-4119-9867-9,"PHILOSOPHY, SCIENCE_FICTION, SOCIAL_SCIENCE"
-Fractured City,"Elliot Miller, Harper Lee",Meridian Press,2014,978-2-0715-1820-3,"CHILDREN, EDUCATION"
-Forgotten Light,"Quinn Gonzalez, Isabella Hernandez",Aurora Editions,2002,978-5-9051-5186-4,FICTION
-Broken Portrait 3,Charlie Jones,Oakshore Press,1994,978-4-6291-4865-2,COOKING
-Radiant Door 4,Alex Gonzalez,Maple Leaf Media,1973,978-3-5733-2214-1,"BIOGRAPHY, EDUCATION, HEALTH"
-Radiant Bridge 5,Harper Robinson,Willow & Co,1966,978-9-6222-9270-6,SPORTS
-Electric Algorithm 5,Noah Clark,Meridian Press,1979,978-8-3473-5977-4,"DRAMA, SCIENCE_FICTION, SOCIAL_SCIENCE"
-Digital Atlas,"Olivia Miller, Mia Lee, Casey Lewis",Maple Leaf Media,1956,978-7-5818-1412-4,"PSYCHOLOGY, TRAVEL"
-Forgotten Atlas,Isabella Davis,Beacon Ridge Media,2007,978-5-0606-8536-1,"DRAMA, EDUCATION"
-Electric Algorithm,"Olivia White, Elliot Lopez, Mia Jones",Hearth & Quill,1954,978-4-7277-9010-4,POETRY
-Lost Promise,"Reese Anderson, Morgan Sanchez",Maple Leaf Media,1980,978-4-1036-9711-7,NONFICTION
-Glass Bridge,Drew White,Hearth & Quill,1987,978-6-0953-9621-8,COMPUTING
-Electric Door 5,Reese Jackson,Northbridge Press,1999,978-7-0654-0515-3,THRILLER
-Golden Tide 3,Quinn Jackson,Silverline House,1972,978-7-7221-7043-0,"ATHLETICS, BIOGRAPHY, BUSINESS"
-Lost City,Rowan Ramirez,Stonegate Publishing,2010,978-4-0345-0541-5,"BIOGRAPHY, TRAVEL"
-Crimson Machine 4,Riley Taylor,Ironwood Publishers,2013,978-5-8416-1692-8,"ART, COOKING"
+Title,authors,publisher,publicationYear,isbn,categories,copies
+Golden River 2,Noah Williams,Blue Harbor Press,2019,978-1-9600-1338-9,HORROR,9
+Hidden Bridge,"Logan Anderson, Drew Thomas",Evercrest Books,1985,978-0-2654-2351-1,"HISTORY, ROMANCE",7
+Digital Empire,Cameron Clark,Northbridge Press,2008,978-8-1618-4959-3,"FINANCE, HEALTH, NONFICTION",1
+Silent City 7,Taylor Lewis,Crescent Books,1962,978-6-4752-5534-1,"BIOGRAPHY, HEALTH",7
+Glass Clock,Parker Wilson,Maple Leaf Media,2021,978-3-5030-5641-3,SCIENCE_FICTION,7
+Velvet Theory,Ava Walker,Blue Harbor Press,2008,978-2-4238-8496-9,BIOGRAPHY,4
+Digital Script,"Reese Taylor, Taylor Sanchez, Jordan Lewis",Lakeside Publishing,1969,978-2-6916-6978-4,"ART, FICTION",2
+Fractured River 1,"Logan Sanchez, Cameron Sanchez",Blue Harbor Press,1993,978-1-4627-0482-8,"HORROR, PSYCHOLOGY, YOUNG_ADULT",5
+Golden Voyage 5,"Casey Gonzalez, Liam Garcia",Stonegate Publishing,2017,978-0-9570-1543-0,"FICTION, HORROR",4
+Secret Tide 1,"Olivia Brown, Liam Jackson",Willow & Co,1966,978-2-7824-8963-8,COMPUTING,7
+Lost Voyage,"Quinn Thomas, Ava Moore",Meridian Press,1965,978-3-3150-9839-3,NONFICTION,9
+Hidden Door 1,Ava Johnson,Beacon Ridge Media,1992,978-1-8347-3829-9,SCIENCE_FICTION,3
+Shadow Algorithm 7,Morgan Williams,Blue Harbor Press,2005,978-5-6670-1065-1,SOCIAL_SCIENCE,3
+Secret Forest,Skyler Garcia,Maple Leaf Media,2009,978-3-1781-0801-3,SOCIAL_SCIENCE,7
+Brave Memory,Rowan Robinson,Northbridge Press,1971,978-6-0647-4687-2,"EDUCATION, HISTORY",1
+Lost Voyage,Noah Jackson,Northbridge Press,1990,978-0-0978-8208-1,"NONFICTION, YOUNG_ADULT",6
+Brave Door,"Drew Wilson, Morgan Robinson",Evercrest Books,1981,978-9-9091-6998-5,SELF_HELP,4
+Broken Forest 3,Rowan Jones,Blue Harbor Press,1988,978-7-5107-9911-8,"ATHLETICS, COOKING, DRAMA",10
+Lost Atlas,"Ava Brown, Ava Davis, Quinn Hernandez",Hearth & Quill,2006,978-8-4980-8412-4,"POETRY, TRAVEL",9
+Golden Empire 2,Sage Miller,Ironwood Publishers,1993,978-3-4874-0164-0,"FICTION, FINANCE, PSYCHOLOGY",9
+Hidden Theory 6,"Riley Harris, Parker Jackson, Sam Anderson",Stonegate Publishing,1951,978-1-1280-5982-6,"SELF_HELP, TECHNOLOGY",7
+Lonely City,"Mia Lewis, Jordan Robinson",Silverline House,1976,978-3-1586-9232-2,"MYSTERY, TRAVEL",7
+Crimson River,"Mia Walker, Skyler Clark, Charlie Lewis",Ironwood Publishers,1981,978-4-2160-7337-5,"COOKING, PSYCHOLOGY",3
+Burning Algorithm,"Rowan Lopez, Cameron Lewis",Lakeside Publishing,1985,978-5-8685-0142-9,"TECHNOLOGY, THRILLER",5
+Broken City,Noah Clark,Silverline House,2005,978-9-8169-3406-0,NONFICTION,10
+Radiant Bridge 6,"Jamie Gonzalez, Skyler Brown",Blue Harbor Press,1992,978-9-5148-4656-4,"ART, CHILDREN, MYSTERY",4
+Fractured Promise,"Rowan Thompson, Noah Robinson",Hearth & Quill,2022,978-4-6804-4369-9,"EDUCATION, SOCIAL_SCIENCE, THRILLER",6
+Wandering Light,"Reese Taylor, Mia Robinson",Willow & Co,1971,978-1-4895-1343-3,BIOGRAPHY,6
+Lonely River,"Sage Lewis, Liam Brown, Parker Anderson",Oakshore Press,2023,978-3-6763-2016-3,FINANCE,1
+Brave Atlas,Isabella Lewis,Lakeside Publishing,2008,978-2-7889-5798-6,"CHILDREN, COMPUTING, FINANCE",2
+Fractured Light 6,"Parker Martinez, Liam Davis",Beacon Ridge Media,1985,978-8-7347-1434-5,"BIOGRAPHY, FICTION",9
+Wandering Bridge,Rowan White,Hearth & Quill,1977,978-1-6658-7603-6,HORROR,10
+Digital Tide 1,"Liam Martin, Rowan Taylor",Northbridge Press,1995,978-4-6688-9373-4,"BUSINESS, FICTION, PSYCHOLOGY",3
+Crimson House,Charlie Clark,Aurora Editions,1971,978-7-2980-6990-1,SPORTS,4
+Crimson Promise 2,Rowan Lopez,Crescent Books,2008,978-5-5646-4170-8,"CHILDREN, SELF_HELP",10
+Ancient Script,Elliot Johnson,Willow & Co,1953,978-3-3092-3271-9,"GEOGRAPHY, MYSTERY, NONFICTION",4
+Lost Light 7,Sage Lee,Ironwood Publishers,1964,978-2-4190-4966-3,"CHILDREN, MYSTERY, YOUNG_ADULT",4
+Silent Tide 6,Sam Sanchez,Maple Leaf Media,1965,978-9-0586-5185-0,EDUCATION,4
+Crimson House,"Elliot Robinson, Olivia Thomas, Sam Jones",Aurora Editions,1972,978-8-4987-7694-5,"COMPUTING, PHILOSOPHY, SCIENCE_FICTION",1
+Secret Door,Liam Thomas,Evercrest Books,1998,978-5-0752-7354-5,COMPUTING,10
+Broken Portrait 3,Reese Miller,Lakeside Publishing,1980,978-6-7837-7701-4,SCIENCE_FICTION,9
+Secret Machine 3,"Quinn Taylor, Logan Moore",Silverline House,2004,978-8-5574-4431-3,"FICTION, HISTORY",2
+Wandering Empire 7,"Jamie Miller, Noah Taylor",Maple Leaf Media,2025,978-8-9413-4352-4,"HISTORY, THRILLER",2
+Hidden Bridge,Jordan Jackson,Maple Leaf Media,1966,978-7-1094-7775-2,"FICTION, MYSTERY, TECHNOLOGY",1
+Ancient Garden 4,Taylor Wilson,Meridian Press,1959,978-9-0229-4131-8,HORROR,5
+Crimson Portrait,"Liam Moore, Rowan Thomas",Oakshore Press,2006,978-4-9649-9091-3,"FANTASY, HORROR",4
+Lost Garden 2,Logan Brown,Hearth & Quill,1950,978-6-7974-0344-7,PSYCHOLOGY,8
+Silent Algorithm 7,"Kai Thompson, Mia Walker",Crescent Books,2004,978-1-8324-2102-4,PHILOSOPHY,1
+Glass Tide 4,Sam Hernandez,Ironwood Publishers,2001,978-4-8877-1906-5,PHILOSOPHY,8
+Glass Garden,Charlie Ramirez,Beacon Ridge Media,2023,978-9-0490-2787-4,"FICTION, FINANCE",1
