@@ -56,16 +56,30 @@ public final class LoanService {
         return loanRepo.save(loan);
     }
 
-    public void returnCopy(UUID loanId) {
+    /**
+     * Marks a loan as returned, updates the holding status, and applies any
+     * overdue fine to the member.
+     *
+     * @param loanId the loan identifier
+     * @return the fine charged for this loan on return (zero if none)
+     */
+    public BigDecimal returnCopy(UUID loanId) {
         Loan loan = loanRepo.findById(loanId)
                 .orElseThrow(() -> new NoSuchElementException("Loan not found: " + loanId));
         Validation.require(!loan.isReturned(), "Already returned");
         Holding h = invRepo.findById(loan.getHolding().getId())
                 .orElseThrow(() -> new IllegalStateException("Holding not found for loan"));
-        loan.markReturned(clock.today());
+        LocalDate today = clock.today();
+        loan.markReturned(today);
         h.markReturned();
         invRepo.update(h);
         loanRepo.update(loan);
+
+        BigDecimal fine = finePolicy.fineFor(loan, today);
+        if (fine.signum() > 0) {
+            loan.getBorrower().addFine(fine);
+        }
+        return fine;
     }
 
     public BigDecimal fine(UUID loanId) {
@@ -80,5 +94,19 @@ public final class LoanService {
 
     public List<Loan> overdueLoans() {
         return loanRepo.findOverdue(clock.today());
+    }
+
+    /**
+     * Convenience method: loan the first available copy of the given media item
+     * for the member.
+     */
+    public Loan loanFirstAvailableCopy(UUID mediaId, Member member) {
+        Objects.requireNonNull(member, "member");
+        List<Holding> holdings = invRepo.findByMediaId(mediaId);
+        Holding available = holdings.stream()
+                .filter(h -> h.getStatus() == HoldingStatus.AVAILABLE)
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("No available copies for media: " + mediaId));
+        return loanCopy(available.getId(), member);
     }
 }

@@ -59,4 +59,22 @@ public final class CatalogService {
                 .filter(h -> h.getStatus() == HoldingStatus.AVAILABLE)
                 .count();
     }
+
+    public List<MediaItem> findAll() {
+        return mediaRepo.findAll();
+    }
+
+    public void markLost(UUID holdingId) {
+        Holding h = invRepo.findById(holdingId)
+                .orElseThrow(() -> new NoSuchElementException("Holding not found: " + holdingId));
+        h.markLost();
+        invRepo.update(h);
+    }
+
+    public void markDamaged(UUID holdingId) {
+        Holding h = invRepo.findById(holdingId)
+                .orElseThrow(() -> new NoSuchElementException("Holding not found: " + holdingId));
+        h.markDamaged();
+        invRepo.update(h);
+    }
 }
