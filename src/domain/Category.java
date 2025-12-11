@@ -1,6 +1,7 @@
 package domain;
 
 public enum Category {
+    // Books
     FICTION,
     NONFICTION,
     HORROR,
@@ -30,5 +31,24 @@ public enum Category {
     COOKING,
     HEALTH,
     PSYCHOLOGY,
-    SOCIAL_SCIENCE
+    SOCIAL_SCIENCE,
+
+    // CDs
+    MUSIC,
+    POP,
+    ROCK,
+    JAZZ,
+    CLASSICAL,
+    ELECTRONIC,
+    AMBIENT,
+    RNB,
+    HIP_HOP,
+    COUNTRY,
+    FOLK,
+    INDIE,
+    RETRO,
+    ACOUSTIC,
+    SOUNDTRACK,
+    ALT_ROCK,
+    EXPERIMENTAL
 }

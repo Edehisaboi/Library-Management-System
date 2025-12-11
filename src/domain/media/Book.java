@@ -30,15 +30,22 @@ public final class Book extends MediaItem {
 
     @Override
     public String details() {
-        return "\n───────────────────────────────\n" +
-                " Title: " + getTitle() + "\n" +
-                "───────────────────────────────\n" +
-                " ID: " + getId() + "\n" +
-                " Authors: " + String.join(", ", getCreators()) + "\n" +
-                " Publisher: " + getPublisher() + "\n" +
-                " Year: " + getYear() + "\n" +
-                " ISBN: " + getIsbn() + "\n" +
-                " Categories: " + getCategories() + "\n";
+        return """
+                Title: %s
+                ID: %s
+                Authors: %s
+                Publisher: %s
+                Year: %s
+                ISBN: %s
+                Categories: %s
+                """.formatted(
+                getTitle(),
+                getId(),
+                String.join(", ", getCreators()),
+                getPublisher(),
+                getYear(),
+                getIsbn(),
+                getCategories());
     }
 
     public static final class Builder {
