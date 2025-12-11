@@ -2,8 +2,8 @@ package authentication;
 
 import java.util.Objects;
 import java.util.Optional;
-import javax.naming.AuthenticationException;
 
+import authentication.session.UserSession;
 import domain.user.User;
 import domain.user.Member;
 import repo.UserRepository;
@@ -18,14 +18,14 @@ public class MemberAuth implements Authenticator {
     }
 
     @Override
-    public User login(String email, String password) throws AuthenticationException {
+    public User login(String email, String password) throws AuthException {
         Optional<User> user = repo.existsByEmailAndPassword(email, password);
         if (user.isEmpty()) {
-            throw new AuthenticationException("Invalid email or password.");
+            throw new AuthException("Invalid email or password.");
         }
         User member = user.get();
         if (!(member instanceof Member)) {
-            throw new AuthenticationException("Access denied. Member account required.");
+            throw new AuthException("Access denied!");
         }
         state.login(member);
         return member;
@@ -33,9 +33,9 @@ public class MemberAuth implements Authenticator {
 
     @Override
     public User register(String firstName, String lastName, String email, String password)
-            throws AuthenticationException {
+            throws AuthException {
         if (repo.existsByEmail(email)) {
-            throw new AuthenticationException("An account with this email already exists.");
+            throw new AuthException("An account with this email already exists.");
         }
         Member newMember = new Member(firstName, lastName, email, password);
         return repo.save(newMember);
