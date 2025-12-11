@@ -1,18 +1,14 @@
 import authentication.Authenticator;
 import authentication.LibrarianAuth;
 import authentication.MemberAuth;
-import authentication.UserSession;
-import authentication.UserState;
-import cli.Navigator;
-import cli.Screen;
-import cli.ScreenId;
-import cli.screens.GuestDashboard;
-import cli.screens.LibrarianDashboard;
-import cli.screens.Login;
-import cli.screens.MainMenu;
-import cli.screens.MemberDashboard;
-import cli.screens.Register;
-import cli.screens.Search;
+import authentication.session.UserSession;
+import authentication.session.UserState;
+import controllers.AdminController;
+import controllers.AuthController;
+import controllers.LibraryController;
+import domain.user.Librarian;
+import domain.user.Member;
+import domain.user.User;
 import policies.FinePolicy;
 import policies.LoanRule;
 import policies.fines.FlatFinePolicy;
@@ -28,22 +24,24 @@ import repo.inmem.InMemoryUserRepository;
 import services.CatalogService;
 import services.LoanService;
 import util.ClockProvider;
-import util.LoadBooks;
+import util.LoadMedia;
+
+import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) {
-        // Wiring: repositories
+        // 1. Wiring Repositories
         UserRepository userRepo = new InMemoryUserRepository();
         MediaRepository mediaRepo = new InMemoryMediaRepository();
         InventoryRepository invRepo = new InMemoryInventoryRepository();
         LoanRepository loanRepo = new InMemoryLoanRepository();
 
-        // Session and authentication
+        // 2. Authentication & Session
         UserSession session = new UserState();
         Authenticator memberAuth = new MemberAuth(userRepo, session);
         Authenticator librarianAuth = new LibrarianAuth(userRepo, session);
 
-        // Policies and services
+        // 3. Policies & Services
         LoanRule loanRule = new BookLoanRule(14, 5);
         java.math.BigDecimal perDay = new java.math.BigDecimal("0.50");
         FinePolicy finePolicy = new FlatFinePolicy(perDay, 0);
@@ -52,29 +50,37 @@ public class Main {
         CatalogService catalog = new CatalogService(mediaRepo, invRepo);
         LoanService loanService = new LoanService(invRepo, loanRepo, loanRule, finePolicy, clock);
 
-        // Load initial media from CSV
-        new LoadBooks("src/lib/book_metadata.csv", true).load(catalog, 5);
+        // 4. Load Initial Data
+        new LoadMedia(catalog).loadBooks("src/lib/book_metadata.csv", true);
+        new LoadMedia(catalog).loadCDs("src/lib/cd_metadata.csv", true);
 
-        // Navigator and screens
-        Navigator nav = new Navigator();
-        Screen mainMenu = new MainMenu(nav);
-        Screen login = new Login(nav, memberAuth, librarianAuth);
-        Screen register = new Register(nav, memberAuth, librarianAuth);
-        Screen guest = new GuestDashboard(nav);
-        Screen memberDash = new MemberDashboard(memberAuth, nav, session);
-        Screen librarianDash = new LibrarianDashboard(librarianAuth, nav, session);
-        Screen search = new Search(catalog);
+        // 5. Controllers
+        AuthController authController = new AuthController(memberAuth, librarianAuth, session);
+        LibraryController libController = new LibraryController(catalog, loanService, memberAuth);
+        AdminController adminController = new AdminController(catalog, loanService, librarianAuth, userRepo);
 
-        // Register screens
-        nav.register(ScreenId.MAIN, mainMenu);
-        nav.register(ScreenId.LOGIN, login);
-        nav.register(ScreenId.REGISTER, register);
-        nav.register(ScreenId.GUEST_DASHBOARD, guest);
-        nav.register(ScreenId.MEMBER_DASHBOARD, memberDash);
-        nav.register(ScreenId.LIBRARIAN_DASHBOARD, librarianDash);
-        nav.register(ScreenId.SEARCH_MEDIA, search);
+        // 6. Main Application Loop
+        while (true) {
+            if (!session.isLoggedIn()) {
+                authController.processAuth();
 
-        // Start app
-        nav.navigateTo(ScreenId.MAIN);
+                // If still not logged in after processAuth returns,
+                // it might mean user chose Guest Search
+                if (!session.isLoggedIn()) {
+                    libController.guestDashboard();
+                }
+            } else {
+                // User is logged in
+                Optional<User> currentUser = session.getCurrentUser();
+                if (currentUser.isPresent()) {
+                    User user = currentUser.get();
+                    if (user instanceof Member m) {
+                        libController.memberDashboard(m);
+                    } else if (user instanceof Librarian l) {
+                        adminController.librarianDashboard(l);
+                    }
+                }
+            }
+        }
     }
 }
