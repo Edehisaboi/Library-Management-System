@@ -5,6 +5,7 @@ import domain.inventory.HoldingStatus;
 import domain.user.Member;
 import policies.LoanRule;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public final class BookLoanRule implements LoanRule {
@@ -19,6 +20,11 @@ public final class BookLoanRule implements LoanRule {
     @Override
     public boolean canLoan(Member member, Holding holding) {
         if (member.isBlocked())
+            return false;
+        if (member.isExpired())
+            return false;
+        // Simple rule: members with any outstanding fines cannot borrow more
+        if (member.getOutstandingFines().compareTo(BigDecimal.ZERO) > 0)
             return false;
         return holding.getStatus() == HoldingStatus.AVAILABLE;
     }
