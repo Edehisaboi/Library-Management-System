@@ -5,7 +5,6 @@ import domain.inventory.HoldingStatus;
 import domain.loan.Loan;
 import domain.user.Member;
 import policies.FinePolicy;
-import policies.rules.BookLoanRule;
 import policies.LoanRule;
 import repo.InventoryRepository;
 import repo.LoanRepository;
@@ -35,7 +34,7 @@ public final class LoanService {
      *
      * @param invRepo    inventory repository
      * @param loanRepo   loan repository
-     * @param loanRule   rules for borrowing eligibility
+     * @param loanRule   rules for borrowing eligibility (should be a Dispatcher)
      * @param finePolicy policy for calculating fines
      * @param clock      provider for current date
      */
@@ -61,14 +60,16 @@ public final class LoanService {
         Objects.requireNonNull(member, "member");
         Holding h = invRepo.findById(holdingId)
                 .orElseThrow(() -> new NoSuchElementException("Holding not found: " + holdingId));
+
+        // Basic holding check
         Validation.require(h.getStatus() == HoldingStatus.AVAILABLE, "Holding not available");
 
-        if (loanRule instanceof BookLoanRule bookRule) {
-            int active = loanRepo.findActiveByMemberId(member.getId()).size();
-            Validation.require(active < bookRule.maxConcurrent(), "Member has reached max concurrent loans");
-        }
+        // Delegate all rule checking to the Policy Dispatcher
+        // The Dispatcher will find the correct rule (Book, DVD, etc.) and run its
+        // logic.
+        // This includes checking concurrent limits if the specific rule requires it.
+        Validation.require(loanRule.canLoan(member, h), "Loan denied by policy (limit reached, fines, or blocked)");
 
-        Validation.require(loanRule.canLoan(member, h), "Loan rule denied");
         h.markOnLoan();
         invRepo.update(h);
 

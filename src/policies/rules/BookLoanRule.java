@@ -4,6 +4,7 @@ import domain.inventory.Holding;
 import domain.inventory.HoldingStatus;
 import domain.user.Member;
 import policies.LoanRule;
+import repo.LoanRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,18 +14,18 @@ import java.time.LocalDate;
  * Enforces concurrent loan limits and outstanding fine checks.
  */
 public final class BookLoanRule implements LoanRule {
+    private final LoanRepository loanRepo;
     private final int loanDays;
-    private final int maxConcurrent;
 
     /**
      * Creates a new BookLoanRule.
      *
-     * @param loanDays      number of days for the loan period
-     * @param maxConcurrent maximum number of active loans allowed per member
+     * @param loanRepo the repository to check active loans
+     * @param loanDays number of days for the loan period
      */
-    public BookLoanRule(int loanDays, int maxConcurrent) {
+    public BookLoanRule(LoanRepository loanRepo, int loanDays) {
+        this.loanRepo = loanRepo;
         this.loanDays = loanDays;
-        this.maxConcurrent = maxConcurrent;
     }
 
     @Override
@@ -33,23 +34,22 @@ public final class BookLoanRule implements LoanRule {
             return false;
         if (member.isExpired())
             return false;
-        // Simple rule: members with any outstanding fines cannot borrow more
+
+        // Check for outstanding fines
         if (member.getOutstandingFines().compareTo(BigDecimal.ZERO) > 0)
             return false;
-        return holding.getStatus() == HoldingStatus.AVAILABLE;
+
+        // Check availability
+        if (holding.getStatus() != HoldingStatus.AVAILABLE)
+            return false;
+
+        // Check concurrent loan limit defined by the Member
+        int activeLoans = loanRepo.findActiveByMemberId(member.getId()).size();
+        return activeLoans < member.getMaxConcurrentLoans();
     }
 
     @Override
     public LocalDate dueDate(Member member, Holding holding, LocalDate now) {
         return now.plusDays(loanDays);
-    }
-
-    /**
-     * Gets the configured maximum concurrent loans.
-     * 
-     * @return max concurrent loans
-     */
-    public int maxConcurrent() {
-        return maxConcurrent;
     }
 }

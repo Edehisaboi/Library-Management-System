@@ -6,13 +6,19 @@ import authentication.session.UserState;
 import controllers.AdminController;
 import controllers.AuthController;
 import controllers.LibraryController;
+import domain.media.Book;
+import domain.media.CD;
+import domain.media.DVD;
 import domain.user.Librarian;
 import domain.user.Member;
 import domain.user.User;
 import policies.FinePolicy;
+import policies.rules.LoanDispatcher;
 import policies.LoanRule;
 import policies.fines.FlatFinePolicy;
 import policies.rules.BookLoanRule;
+import policies.rules.CDLoanRule;
+import policies.rules.DVDLoanRule;
 import repo.InventoryRepository;
 import repo.LoanRepository;
 import repo.MediaRepository;
@@ -51,25 +57,39 @@ public class Main {
         Authenticator memberAuth = new MemberAuth(userRepo, session);
         Authenticator librarianAuth = new LibrarianAuth(userRepo, session);
 
-        // 3. Policies & Services
-        LoanRule loanRule = new BookLoanRule(14, 5);
+        // 3. Policies & Rules
+        // Create specific rules
+        // Book: 14 days loan, checks active loans vs member limit using loanRepo
+        LoanRule bookRule = new BookLoanRule(loanRepo, 14);
+        // DVD: 7 days loan, also checks limits
+        LoanRule dvdRule = new DVDLoanRule(loanRepo, 7);
+        // CD: 7 days loan, also checks limits
+        LoanRule cdRule = new CDLoanRule(loanRepo, 7);
+
+        // Create Dispatcher and register rules
+        LoanDispatcher loanDispatcher = new LoanDispatcher();
+        loanDispatcher.register(Book.class, bookRule);
+        loanDispatcher.register(DVD.class, dvdRule);
+        loanDispatcher.register(CD.class, cdRule);
+
         java.math.BigDecimal perDay = new java.math.BigDecimal("0.50");
         FinePolicy finePolicy = new FlatFinePolicy(perDay, 0);
         ClockProvider clock = ClockProvider.system();
 
+        // 4. Services
         CatalogService catalog = new CatalogService(mediaRepo, invRepo);
-        LoanService loanService = new LoanService(invRepo, loanRepo, loanRule, finePolicy, clock);
+        LoanService loanService = new LoanService(invRepo, loanRepo, loanDispatcher, finePolicy, clock);
 
-        // 4. Load Initial Data
+        // 5. Load Initial Data
         new LoadMedia(catalog).loadBooks("src/lib/book_metadata.csv", true);
         new LoadMedia(catalog).loadCDs("src/lib/cd_metadata.csv", true);
 
-        // 5. Controllers
+        // 6. Controllers
         AuthController authController = new AuthController(memberAuth, librarianAuth, session);
         LibraryController libController = new LibraryController(catalog, loanService, memberAuth);
         AdminController adminController = new AdminController(catalog, loanService, librarianAuth, userRepo);
 
-        // 6. Main Application Loop
+        // 7. Main Application Loop
         while (true) {
             if (!session.isLoggedIn()) {
                 authController.processAuth();

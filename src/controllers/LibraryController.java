@@ -109,27 +109,44 @@ public class LibraryController {
             }
 
             view.showMessage("0. Back to Dashboard");
-            int choice = view.promptInt("Select an item to borrow (or 0 to cancel)", 0, results.size());
+            int choice = view.promptInt("Select an item to view details (or 0 to cancel)", 0, results.size());
 
             if (choice == 0) {
                 return;
             }
 
             MediaItem selected = results.get(choice - 1);
-            if (member == null) {
-                // Guests cannot borrow
-                view.showError("You must be a registered member to borrow items. Please register or login.");
-                view.pause();
-            } else {
-                // Attempt to borrow the selected item
-                try {
-                    loans.loanFirstAvailableCopy(selected.getId(), member);
-                    view.showMessage("Successfully borrowed: " + selected.getTitle());
+            showItemDetails(selected, member);
+        }
+    }
+
+    // Shows item details and offers borrowing options
+    private void showItemDetails(MediaItem item, Member member) {
+        while (true) {
+            view.showMessage("\n===== ITEM DETAILS =====");
+            view.showMessage(item.details());
+
+            view.showMessage("\n1. Borrow this item");
+            view.showMessage("2. Back to List");
+
+            int choice = view.promptInt("Select an option", 1, 2);
+            if (choice == 2)
+                return;
+
+            if (choice == 1) {
+                if (member == null) {
+                    view.showError("You must be a registered member to borrow items. Please register or login.");
                     view.pause();
-                    return;
-                } catch (Exception e) {
-                    view.showError("Could not borrow: " + e.getMessage());
-                    view.pause();
+                } else {
+                    try {
+                        loans.loanFirstAvailableCopy(item.getId(), member);
+                        view.showMessage("Successfully borrowed: " + item.getTitle());
+                        view.pause();
+                        return;
+                    } catch (Exception e) {
+                        view.showError("Could not borrow: " + e.getMessage());
+                        view.pause();
+                    }
                 }
             }
         }

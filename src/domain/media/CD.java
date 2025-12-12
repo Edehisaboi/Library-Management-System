@@ -52,6 +52,12 @@ public class CD extends MediaItem {
 
     @Override
     public String details() {
-        return "[" + durationMinutes + " min, " + trackCount + " tracks]";
+        return "Type: CD\n" +
+                "Title: " + getTitle() + "\n" +
+                "Artists: " + String.join(", ", getCreators()) + "\n" +
+                "Year: " + getYear() + "\n" +
+                "Duration: " + durationMinutes + " min\n" +
+                "Tracks: " + trackCount + "\n" +
+                "Categories: " + getCategories();
     }
 }

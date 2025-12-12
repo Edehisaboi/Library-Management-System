@@ -63,12 +63,13 @@ public final class DVD extends MediaItem {
 
     @Override
     public String details() {
-        StringBuilder sb = new StringBuilder("[").append(durationMinutes).append(" min");
-        if (!regionCode.isEmpty())
-            sb.append(", R").append(regionCode);
-        if (!rating.isEmpty())
-            sb.append(", ").append(rating);
-        sb.append("]");
-        return sb.toString();
+        return "Type: DVD\n" +
+                "Title: " + getTitle() + "\n" +
+                "Directors: " + String.join(", ", getCreators()) + "\n" +
+                "Year: " + getYear() + "\n" +
+                "Duration: " + durationMinutes + " min\n" +
+                "Rating: " + rating + "\n" +
+                "Region Code: " + regionCode + "\n" +
+                "Categories: " + getCategories();
     }
 }
