@@ -8,10 +8,20 @@ import policies.LoanRule;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * Standard loan rules for Books.
+ * Enforces concurrent loan limits and outstanding fine checks.
+ */
 public final class BookLoanRule implements LoanRule {
     private final int loanDays;
     private final int maxConcurrent;
 
+    /**
+     * Creates a new BookLoanRule.
+     *
+     * @param loanDays      number of days for the loan period
+     * @param maxConcurrent maximum number of active loans allowed per member
+     */
     public BookLoanRule(int loanDays, int maxConcurrent) {
         this.loanDays = loanDays;
         this.maxConcurrent = maxConcurrent;
@@ -34,6 +44,11 @@ public final class BookLoanRule implements LoanRule {
         return now.plusDays(loanDays);
     }
 
+    /**
+     * Gets the configured maximum concurrent loans.
+     * 
+     * @return max concurrent loans
+     */
     public int maxConcurrent() {
         return maxConcurrent;
     }

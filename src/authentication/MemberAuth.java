@@ -8,10 +8,19 @@ import domain.user.User;
 import domain.user.Member;
 import repo.UserRepository;
 
+/**
+ * Authenticator implementation for standard Members.
+ */
 public class MemberAuth implements Authenticator {
     private final UserRepository repo;
     private final UserSession state;
 
+    /**
+     * Creates a new MemberAuth.
+     * 
+     * @param repo  user repository
+     * @param state user session state
+     */
     public MemberAuth(UserRepository repo, UserSession state) {
         this.repo = Objects.requireNonNull(repo, "UserRepository cannot be null");
         this.state = Objects.requireNonNull(state, "UserState cannot be null");

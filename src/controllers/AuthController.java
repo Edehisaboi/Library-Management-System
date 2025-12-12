@@ -5,12 +5,23 @@ import authentication.AuthException;
 import authentication.session.UserSession;
 import infra.ConsoleView;
 
+/**
+ * Controller for handling User Authentication flows.
+ * Manages Login and Registration for Members and Librarians.
+ */
 public class AuthController {
     private final Authenticator memberAuth;
     private final Authenticator librarianAuth;
     private final UserSession session;
     private final ConsoleView view;
 
+    /**
+     * Creates a new AuthController.
+     *
+     * @param memberAuth    authenticator for members
+     * @param librarianAuth authenticator for librarians
+     * @param session       session manager
+     */
     public AuthController(Authenticator memberAuth, Authenticator librarianAuth, UserSession session) {
         this.memberAuth = memberAuth;
         this.librarianAuth = librarianAuth;
@@ -18,6 +29,11 @@ public class AuthController {
         this.view = ConsoleView.getInstance();
     }
 
+    /**
+     * Starts the main authentication loop.
+     * Displays the welcome screen and handles login/register inputs.
+     * Loops until a user is logged in or the application exits.
+     */
     public void processAuth() {
         while (!session.isLoggedIn()) {
             view.showMessage("""
@@ -48,6 +64,7 @@ public class AuthController {
         }
     }
 
+    // Handles the login flow for a specific user role
     private void login(Authenticator auth, String role) {
         view.showMessage("\n=== " + role.toUpperCase() + " LOGIN ===");
         String email = view.promptString("Enter email");
@@ -62,6 +79,7 @@ public class AuthController {
         }
     }
 
+    // Handles the registration flow for a new user
     private void register(Authenticator auth, String role) {
         view.showMessage("\n=== " + role.toUpperCase() + " REGISTRATION ===");
 

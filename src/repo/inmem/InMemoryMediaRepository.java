@@ -5,6 +5,10 @@ import repo.MediaRepository;
 
 import java.util.*;
 
+/**
+ * In-memory implementation of MediaRepository.
+ * Stores media items in a HashMap.
+ */
 public final class InMemoryMediaRepository implements MediaRepository {
     private final Map<UUID, MediaItem> store = new HashMap<>();
 
@@ -24,5 +28,3 @@ public final class InMemoryMediaRepository implements MediaRepository {
         return new ArrayList<>(store.values());
     }
 }
-
-

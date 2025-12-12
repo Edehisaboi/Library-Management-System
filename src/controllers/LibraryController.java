@@ -11,12 +11,23 @@ import services.LoanService;
 
 import java.util.List;
 
+/**
+ * Controller for general library operations accessible by Members and Guests.
+ * Handles Searching, Borrowing, and Returning items.
+ */
 public class LibraryController {
     private final CatalogService catalog;
     private final LoanService loans;
     private final Authenticator memberAuth;
     private final ConsoleView view;
 
+    /**
+     * Creates a new LibraryController.
+     *
+     * @param catalog    service for catalog operations
+     * @param loans      service for loan operations
+     * @param memberAuth authenticator for member actions (logout)
+     */
     public LibraryController(CatalogService catalog, LoanService loans,
             Authenticator memberAuth) {
         this.catalog = catalog;
@@ -25,6 +36,10 @@ public class LibraryController {
         this.view = ConsoleView.getInstance();
     }
 
+    /**
+     * Displays the dashboard for Guest users.
+     * Limited to searching the catalog.
+     */
     public void guestDashboard() {
         while (true) {
             view.showMessage("""
@@ -43,6 +58,12 @@ public class LibraryController {
         }
     }
 
+    /**
+     * Displays the dashboard for logged-in Members.
+     * Full access to search, borrow, return, and profile.
+     * 
+     * @param member the currently logged-in member
+     */
     public void memberDashboard(Member member) {
         while (true) {
             view.showMessage("""
@@ -67,6 +88,7 @@ public class LibraryController {
         }
     }
 
+    // Handles searching for items and borrowing them if a member is present
     private void searchCatalog(Member member) {
         String query = view.promptString("Enter search query (title/creator or blank for all)", true);
         Query q = new Query(query, query, null);
@@ -95,9 +117,11 @@ public class LibraryController {
 
             MediaItem selected = results.get(choice - 1);
             if (member == null) {
+                // Guests cannot borrow
                 view.showError("You must be a registered member to borrow items. Please register or login.");
                 view.pause();
             } else {
+                // Attempt to borrow the selected item
                 try {
                     loans.loanFirstAvailableCopy(selected.getId(), member);
                     view.showMessage("Successfully borrowed: " + selected.getTitle());
@@ -111,6 +135,7 @@ public class LibraryController {
         }
     }
 
+    // Displays active loans and handles returns
     private void viewLoans(Member member) {
         while (true) {
             List<Loan> active = loans.activeLoans(member.getId());
@@ -135,6 +160,7 @@ public class LibraryController {
             }
 
             Loan selected = active.get(choice - 1);
+            // Attempt to return the selected loan and calculate fines
             try {
                 var fine = loans.returnCopy(selected.getId());
                 view.showMessage("Returned successfully: " + selected.getHolding().getItem().getTitle());

@@ -3,6 +3,10 @@ package authentication.session;
 import domain.user.User;
 import java.util.Optional;
 
+/**
+ * Standard implementation of UserSession using a simple field.
+ * Not thread-safe (intended for single-threaded CLI).
+ */
 public final class UserState implements UserSession {
     private User currentUser;
 

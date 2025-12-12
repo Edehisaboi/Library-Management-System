@@ -7,6 +7,10 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * In-memory implementation of LoanRepository.
+ * Stores loans in a HashMap.
+ */
 public final class InMemoryLoanRepository implements LoanRepository {
     private final Map<UUID, Loan> store = new HashMap<>();
 

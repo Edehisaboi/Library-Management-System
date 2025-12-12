@@ -8,10 +8,19 @@ import domain.user.User;
 import domain.user.Librarian;
 import repo.UserRepository;
 
+/**
+ * Authenticator implementation for Librarian users.
+ */
 public class LibrarianAuth implements Authenticator {
     private final UserRepository repo;
     private final UserSession state;
 
+    /**
+     * Creates a new LibrarianAuth.
+     * 
+     * @param repo  user repository
+     * @param state user session state
+     */
     public LibrarianAuth(UserRepository repo, UserSession state) {
         this.repo = Objects.requireNonNull(repo, "UserRepository cannot be null");
         this.state = Objects.requireNonNull(state, "UserState cannot be null");

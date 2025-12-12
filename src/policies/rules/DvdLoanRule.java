@@ -7,9 +7,18 @@ import policies.LoanRule;
 
 import java.time.LocalDate;
 
+/**
+ * Loan rules for DVDs.
+ * Typically shorter loan periods and fewer restrictions than books.
+ */
 public final class DvdLoanRule implements LoanRule {
     private final int loanDays;
 
+    /**
+     * Creates a new DvdLoanRule.
+     * 
+     * @param loanDays number of days for the loan
+     */
     public DvdLoanRule(int loanDays) {
         this.loanDays = loanDays;
     }

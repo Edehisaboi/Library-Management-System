@@ -5,6 +5,10 @@ import repo.UserRepository;
 
 import java.util.*;
 
+/**
+ * In-memory implementation of UserRepository.
+ * Stores users in a HashMap and maintains an index by email.
+ */
 public final class InMemoryUserRepository implements UserRepository {
     private final Map<UUID, User> store = new HashMap<>();
     private final Map<String, UUID> byEmail = new HashMap<>();
@@ -29,7 +33,13 @@ public final class InMemoryUserRepository implements UserRepository {
 
     @Override
     public Optional<User> existsByEmailAndPassword(String email, String password) {
-        User user = store.get(byEmail.get(email.trim().toLowerCase(Locale.ROOT)));
+        // Look up by email first
+        UUID id = byEmail.get(email.trim().toLowerCase(Locale.ROOT));
+        if (id == null) {
+            return Optional.empty();
+        }
+        User user = store.get(id);
+        // Then check password
         return Optional.ofNullable(user).filter(u -> Objects.equals(u.getPassword(), password));
     }
 

@@ -10,6 +10,10 @@ import java.util.Set;
 import java.util.Locale;
 import java.util.Objects;
 
+/**
+ * Abstract base class representing a media item in the library catalog.
+ * Stores common metadata like title, creators, and year.
+ */
 public abstract class MediaItem {
     private final UUID id;
     private final String title;
@@ -17,6 +21,14 @@ public abstract class MediaItem {
     private final int year;
     private final Set<Category> categories;
 
+    /**
+     * Initializes a new MediaItem.
+     *
+     * @param title      the title of the item
+     * @param creators   list of authors, artists, or directors
+     * @param year       release year
+     * @param categories set of categories the item belongs to
+     */
     protected MediaItem(String title, List<String> creators, int year, Set<Category> categories) {
         this.id = UUID.randomUUID();
         this.title = Validation.nonBlank(title, "title");
@@ -26,26 +38,59 @@ public abstract class MediaItem {
         this.categories = Set.copyOf(Validation.nonNull(categories, "categories"));
     }
 
+    /**
+     * Gets the unique ID of the media item.
+     * 
+     * @return the UUID
+     */
     public UUID getId() {
         return id;
     }
 
+    /**
+     * Gets the title of the media item.
+     * 
+     * @return the title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Gets the list of creators (authors, artists, etc.).
+     * 
+     * @return an immutable list of creators
+     */
     public List<String> getCreators() {
         return creators;
     }
 
+    /**
+     * Gets the release year.
+     * 
+     * @return the year
+     */
     public int getYear() {
         return year;
     }
 
+    /**
+     * Gets the set of categories associated with this item.
+     * 
+     * @return an immutable set of categories
+     */
     public Set<Category> getCategories() {
         return categories;
     }
 
+    /**
+     * Checks if this item matches the given search query.
+     * Matches against title and creators (case-insensitive partial match)
+     * and year (exact match).
+     *
+     * @param q the search query object
+     * @return true if it matches, false otherwise
+     */
     public boolean matches(Query q) {
         if (q == null) {
             return true;
@@ -81,6 +126,11 @@ public abstract class MediaItem {
         return textMatches && yearMatches;
     }
 
+    /**
+     * Returns a string with specific details about the item (e.g. ISBN for books).
+     * 
+     * @return detail string
+     */
     public abstract String details();
 
     @Override

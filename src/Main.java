@@ -28,7 +28,17 @@ import util.LoadMedia;
 
 import java.util.Optional;
 
+/**
+ * Main entry point for the Library Management System.
+ * Handles dependency injection and the main application loop.
+ */
 public class Main {
+    /**
+     * Application start method.
+     * Wires repositories, services, and controllers, then starts the main loop.
+     *
+     * @param args command line arguments (not used)
+     */
     public static void main(String[] args) {
         // 1. Wiring Repositories
         UserRepository userRepo = new InMemoryUserRepository();

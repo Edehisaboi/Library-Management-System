@@ -6,24 +6,52 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Represents a Book in the library catalog.
+ */
 public final class Book extends MediaItem {
     private final String isbn;
     private final String publisher;
 
+    /**
+     * Creates a new Book instance.
+     *
+     * @param title      the title of the book
+     * @param authors    list of authors
+     * @param year       publication year
+     * @param categories set of categories
+     * @param isbn       ISBN-13 or ISBN-10
+     * @param publisher  publisher name
+     */
     public Book(String title, List<String> authors, int year, Set<Category> categories, String isbn, String publisher) {
         super(title, authors, year, categories);
         this.isbn = isbn;
         this.publisher = publisher;
     }
 
+    /**
+     * Creates a Builder for constructing a Book step-by-step.
+     * 
+     * @return a new Builder instance
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Gets the ISBN of the book.
+     * 
+     * @return the ISBN string
+     */
     public String getIsbn() {
         return isbn;
     }
 
+    /**
+     * Gets the publisher of the book.
+     * 
+     * @return the publisher name
+     */
     public String getPublisher() {
         return publisher;
     }
@@ -48,6 +76,9 @@ public final class Book extends MediaItem {
                 getCategories());
     }
 
+    /**
+     * Builder pattern for creating Book objects comfortably.
+     */
     public static final class Builder {
         private String title;
         private final List<String> authors = new ArrayList<>();

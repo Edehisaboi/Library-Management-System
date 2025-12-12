@@ -6,6 +6,10 @@ import repo.InventoryRepository;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * In-memory implementation of InventoryRepository.
+ * Stores holdings in a HashMap.
+ */
 public final class InMemoryInventoryRepository implements InventoryRepository {
     private final Map<UUID, Holding> store = new HashMap<>();
     private final Map<UUID, List<UUID>> byMedia = new HashMap<>();

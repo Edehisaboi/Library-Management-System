@@ -16,6 +16,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Controller for Librarian-specific actions.
+ * Handles inventory management, user management, and administrative reports.
+ */
 public class AdminController {
     private final CatalogService catalog;
     private final LoanService loans;
@@ -23,6 +27,14 @@ public class AdminController {
     private final UserRepository userRepo;
     private final ConsoleView view;
 
+    /**
+     * Creates a new AdminController.
+     *
+     * @param catalog       service for managing media
+     * @param loans         service for managing loans
+     * @param librarianAuth authenticator for librarian actions
+     * @param userRepo      repository for user management
+     */
     public AdminController(CatalogService catalog, LoanService loans, Authenticator librarianAuth,
             UserRepository userRepo) {
         this.catalog = catalog;
@@ -32,6 +44,11 @@ public class AdminController {
         this.view = ConsoleView.getInstance();
     }
 
+    /**
+     * Displays the main dashboard for a logged-in Librarian.
+     * 
+     * @param librarian the current librarian
+     */
     public void librarianDashboard(Librarian librarian) {
         while (true) {
             view.showMessage("""
@@ -60,6 +77,7 @@ public class AdminController {
         }
     }
 
+    // Handles the search catalog workflow for admins
     private void searchCatalogLogic() {
         String query = view.promptString("Enter search query (title/creator)");
         var results = catalog.search(new domain.Query(query, query, null));
@@ -72,6 +90,7 @@ public class AdminController {
         view.pause();
     }
 
+    // Displays the inventory management menu and handles selection
     private void manageInventory() {
         while (true) {
             view.showMessage("""
@@ -94,6 +113,7 @@ public class AdminController {
         }
     }
 
+    // Guides the admin through creating a new book with all details
     private void addNewBook() {
         view.showMessage("\n--- Add New Book ---");
         String title = view.promptString("Title");
@@ -117,6 +137,7 @@ public class AdminController {
 
         authors.forEach(bookBuilder::addAuthor);
 
+        // Parse category strings into enum values, ignoring invalid ones
         for (String c : catInput.split(",")) {
             try {
                 bookBuilder.addCategory(Category.valueOf(c.trim().toUpperCase()));
@@ -131,6 +152,7 @@ public class AdminController {
         view.pause();
     }
 
+    // Allows adding a physical copy to an existing title found by search
     private void addCopyToExisting() {
         // Simple search to find the book first
         String query = view.promptString("Enter title or ISBN to search");
@@ -160,8 +182,10 @@ public class AdminController {
         view.pause();
     }
 
+    // Lists all registered members and provides options to manage them
     private void manageUsers() {
         List<User> users = userRepo.findAll();
+        // Filter only Member objects, ignore Librarians
         List<Member> members = users.stream()
                 .filter(u -> u instanceof Member)
                 .map(u -> (Member) u)
@@ -190,6 +214,7 @@ public class AdminController {
         updateMember(selected);
     }
 
+    // Toggles the blocked status of a selected member
     private void updateMember(Member member) {
         view.showMessage("\nUpdating: " + member.getFirstName() + " " + member.getLastName());
         view.showMessage("1. " + (member.isBlocked() ? "Unblock Member" : "Block Member"));
@@ -207,6 +232,7 @@ public class AdminController {
         }
     }
 
+    // Displays all loans that are currently overdue
     private void viewOverdueLoans() {
         var overdue = loans.overdueLoans();
         if (overdue.isEmpty()) {

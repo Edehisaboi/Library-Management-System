@@ -4,6 +4,10 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+/**
+ * Helper class for reading and validating user input from the console.
+ * Wraps System.in operations to handle exceptions and enforce rules.
+ */
 public class InputReader {
     private final Scanner scanner = new Scanner(System.in);
 
@@ -12,6 +16,13 @@ public class InputReader {
     // Alphabetic only regex (allowing spaces/hyphens for names like "Mary-Jane")
     private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z\\s-]+$");
 
+    /**
+     * Reads an integer from the user.
+     * Loops until valid input is received.
+     *
+     * @param message prompt to display
+     * @return the entered integer
+     */
     public int getInt(String message) {
         int number;
         while (true) {
@@ -27,6 +38,14 @@ public class InputReader {
         }
     }
 
+    /**
+     * Reads an integer within a specified range (inclusive).
+     *
+     * @param message prompt to display
+     * @param min     minimum value
+     * @param max     maximum value
+     * @return the valid integer
+     */
     public int getInt(String message, int min, int max) {
         int number;
         while (true) {
@@ -39,6 +58,12 @@ public class InputReader {
         }
     }
 
+    /**
+     * Reads a single character from the user.
+     *
+     * @param message prompt to display
+     * @return the character (uppercased)
+     */
     public char getChar(String message) {
         while (true) {
             System.out.print(message + ": ");
@@ -50,10 +75,23 @@ public class InputReader {
         }
     }
 
+    /**
+     * Reads a non-blank string from the user.
+     *
+     * @param message prompt to display
+     * @return the input string
+     */
     public String getString(String message) {
         return getString(message, false);
     }
 
+    /**
+     * Reads a string from the user, optionally allowing blanks.
+     *
+     * @param message    prompt to display
+     * @param allowBlank if true, empty input returns empty string
+     * @return the input string
+     */
     public String getString(String message, boolean allowBlank) {
         while (true) {
             System.out.print(message + ": ");
@@ -67,10 +105,27 @@ public class InputReader {
         }
     }
 
+    /**
+     * Reads a string with length constraints (max length).
+     *
+     * @param message prompt to display
+     * @param mode    constraint mode ("MAX" or "MIN")
+     * @param length  length threshold
+     * @return valid string
+     */
     public String getString(String message, String mode, int length) {
         return getString(message, mode, length, false);
     }
 
+    /**
+     * Reads a string with constraints.
+     *
+     * @param message    prompt to display
+     * @param mode       "MAX" or "MIN" length check
+     * @param length     constraint value
+     * @param allowBlank true to allow empty input
+     * @return valid string
+     */
     public String getString(String message, String mode, int length, boolean allowBlank) {
         while (true) {
             String input = getString(message, allowBlank);
@@ -86,6 +141,12 @@ public class InputReader {
         }
     }
 
+    /**
+     * Reads a name (alphabetic characters, spaces, hyphens only).
+     *
+     * @param message prompt to display
+     * @return validated name string
+     */
     public String getAlphabeticString(String message) {
         while (true) {
             String input = getString(message);
@@ -96,6 +157,12 @@ public class InputReader {
         }
     }
 
+    /**
+     * Reads and validates an email address format.
+     *
+     * @param message prompt to display
+     * @return validated email string
+     */
     public String getEmail(String message) {
         while (true) {
             String input = getString(message);
@@ -106,6 +173,11 @@ public class InputReader {
         }
     }
 
+    /**
+     * Pauses execution until the user presses Enter.
+     *
+     * @param prompt optional message to display before waiting
+     */
     public void pause(String prompt) {
         System.out.print("\n" + (prompt == null || prompt.isBlank() ? "Press Enter to continue..." : prompt));
         scanner.nextLine();

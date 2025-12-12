@@ -7,15 +7,32 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * A simple fine policy that charges a flat rate per day overdue.
+ * Supports a grace period and a maximum fine cap.
+ */
 public final class FlatFinePolicy implements FinePolicy {
     private final BigDecimal perDay;
     private final int graceDays;
     private final BigDecimal maxFine;
 
+    /**
+     * Creates a policy with a daily rate and grace period.
+     * 
+     * @param perDay    fine amount per day
+     * @param graceDays number of days before fines start accumulating
+     */
     public FlatFinePolicy(BigDecimal perDay, int graceDays) {
         this(perDay, graceDays, null);
     }
 
+    /**
+     * Creates a policy with a daily rate, grace period, and maximum cap.
+     * 
+     * @param perDay    fine amount per day
+     * @param graceDays number of days before fines start
+     * @param maxFine   maximum total fine allowed (can be null for no limit)
+     */
     public FlatFinePolicy(BigDecimal perDay, int graceDays, BigDecimal maxFine) {
         this.perDay = perDay;
         this.graceDays = graceDays;

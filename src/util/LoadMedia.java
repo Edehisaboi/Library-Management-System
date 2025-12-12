@@ -13,13 +13,28 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Utility for loading media items from CSV files.
+ * Parses CSV lines and populates the CatalogService.
+ */
 public class LoadMedia {
     private final CatalogService catalogService;
 
+    /**
+     * Creates a new loader.
+     * 
+     * @param catalogService the service to load items into
+     */
     public LoadMedia(CatalogService catalogService) {
         this.catalogService = catalogService;
     }
 
+    /**
+     * Loads books from a CSV file.
+     *
+     * @param filePath  path to the CSV file
+     * @param hasHeader true if the file has a header row to skip
+     */
     public void loadBooks(String filePath, boolean hasHeader) {
         String row;
 
@@ -78,6 +93,12 @@ public class LoadMedia {
         }
     }
 
+    /**
+     * Loads CDs from a CSV file.
+     *
+     * @param filePath  path to the CSV file
+     * @param hasHeader true to skip the first row
+     */
     public void loadCDs(String filePath, boolean hasHeader) {
         String row;
 

@@ -1,5 +1,10 @@
 package domain;
 
+/**
+ * Enumeration of all supported media categories in the library.
+ * Covers Books, CDs, and DVDs.
+ */
+
 public enum Category {
     // Books
     FICTION,

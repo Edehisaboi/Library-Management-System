@@ -19,6 +19,10 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * Service for managing loans, returns, and fines.
+ * Enforces loan rules and policies.
+ */
 public final class LoanService {
     private final InventoryRepository invRepo;
     private final LoanRepository loanRepo;
@@ -26,6 +30,15 @@ public final class LoanService {
     private final FinePolicy finePolicy;
     private final ClockProvider clock;
 
+    /**
+     * Creates a new LoanService.
+     *
+     * @param invRepo    inventory repository
+     * @param loanRepo   loan repository
+     * @param loanRule   rules for borrowing eligibility
+     * @param finePolicy policy for calculating fines
+     * @param clock      provider for current date
+     */
     public LoanService(InventoryRepository invRepo, LoanRepository loanRepo, LoanRule loanRule, FinePolicy finePolicy,
             ClockProvider clock) {
         this.invRepo = Objects.requireNonNull(invRepo, "invRepo");
@@ -35,6 +48,15 @@ public final class LoanService {
         this.clock = Objects.requireNonNull(clock, "clock");
     }
 
+    /**
+     * Creates a loan for a specific holding for a member.
+     * Checks eligibility rules before proceeding.
+     *
+     * @param holdingId the specific copy to loan
+     * @param member    the borrowing member
+     * @return the created Loan object
+     * @throws IllegalArgumentException if validation fails
+     */
     public Loan loanCopy(UUID holdingId, Member member) {
         Objects.requireNonNull(member, "member");
         Holding h = invRepo.findById(holdingId)
@@ -82,23 +104,44 @@ public final class LoanService {
         return fine;
     }
 
+    /**
+     * Calculates the potential fine for a loan if returned today.
+     * 
+     * @param loanId the loan ID
+     * @return calculated fine amount
+     */
     public BigDecimal fine(UUID loanId) {
         Loan loan = loanRepo.findById(loanId)
                 .orElseThrow(() -> new NoSuchElementException("Loan not found: " + loanId));
         return finePolicy.fineFor(loan, clock.today());
     }
 
+    /**
+     * Finds all currently active loans for a member.
+     * 
+     * @param memberId the member ID
+     * @return list of active loans
+     */
     public List<Loan> activeLoans(UUID memberId) {
         return loanRepo.findActiveByMemberId(memberId);
     }
 
+    /**
+     * Finds all loans that are past their due date.
+     * 
+     * @return list of overdue loans
+     */
     public List<Loan> overdueLoans() {
         return loanRepo.findOverdue(clock.today());
     }
 
     /**
-     * Convenience method: loan the first available copy of the given media item
-     * for the member.
+     * Convenience method: loans the first available copy of a media item.
+     *
+     * @param mediaId the media title ID
+     * @param member  the borrowing member
+     * @return the created Loan
+     * @throws NoSuchElementException if no copies are available
      */
     public Loan loanFirstAvailableCopy(UUID mediaId, Member member) {
         Objects.requireNonNull(member, "member");
