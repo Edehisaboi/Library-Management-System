@@ -31,12 +31,4 @@ public final class InMemoryInventoryRepository implements InventoryRepository {
         List<UUID> ids = byMedia.getOrDefault(mediaId, List.of());
         return ids.stream().map(store::get).filter(Objects::nonNull).collect(Collectors.toList());
     }
-
-    @Override
-    public void update(Holding h) {
-        if (!store.containsKey(h.getId())) {
-            throw new NoSuchElementException("Holding not found: " + h.getId());
-        }
-        store.put(h.getId(), h);
-    }
 }

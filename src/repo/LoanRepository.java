@@ -12,19 +12,12 @@ import java.util.UUID;
  */
 public interface LoanRepository {
     /**
-     * Saves a new loan.
+     * Saves a new loan or updates an existing one.
      * 
      * @param loan the loan to save
      * @return the saved loan
      */
     Loan save(Loan loan);
-
-    /**
-     * Updates an existing loan.
-     * 
-     * @param loan the loan with updated state
-     */
-    void update(Loan loan);
 
     /**
      * Finds a loan by its unique ID.

@@ -33,11 +33,4 @@ public interface InventoryRepository {
      * @return list of holdings
      */
     List<Holding> findByMediaId(UUID mediaId);
-
-    /**
-     * Updates an existing holding.
-     * 
-     * @param h the holding with updated state
-     */
-    void update(Holding h);
 }

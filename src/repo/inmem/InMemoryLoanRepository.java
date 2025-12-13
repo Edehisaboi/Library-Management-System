@@ -21,14 +21,6 @@ public final class InMemoryLoanRepository implements LoanRepository {
     }
 
     @Override
-    public void update(Loan loan) {
-        if (!store.containsKey(loan.getId())) {
-            throw new NoSuchElementException("Loan not found: " + loan.getId());
-        }
-        store.put(loan.getId(), loan);
-    }
-
-    @Override
     public Optional<Loan> findById(UUID id) {
         return Optional.ofNullable(store.get(id));
     }
