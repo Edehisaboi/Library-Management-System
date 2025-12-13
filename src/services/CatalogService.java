@@ -4,7 +4,7 @@ import domain.Query;
 import domain.inventory.Holding;
 import domain.inventory.HoldingStatus;
 import domain.media.MediaItem;
-import infra.ConsoleView;
+import infrastructure.ConsoleView;
 import repo.*;
 import util.Validation;
 
