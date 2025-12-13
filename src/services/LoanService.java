@@ -1,15 +1,13 @@
 package services;
 
-import domain.inventory.Holding;
-import domain.inventory.HoldingStatus;
+import domain.inventory.*;
 import domain.loan.Loan;
 import domain.user.Member;
 import policies.FinePolicy;
 import policies.LoanRule;
 import repo.InventoryRepository;
 import repo.LoanRepository;
-import util.ClockProvider;
-import util.Validation;
+import util.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,7 +32,7 @@ public final class LoanService {
      *
      * @param invRepo    inventory repository
      * @param loanRepo   loan repository
-     * @param loanRule   rules for borrowing eligibility (should be a Dispatcher)
+     * @param loanRule   rules for borrowing eligibility
      * @param finePolicy policy for calculating fines
      * @param clock      provider for current date
      */
@@ -57,21 +55,14 @@ public final class LoanService {
      * @throws IllegalArgumentException if validation fails
      */
     public Loan loanCopy(UUID holdingId, Member member) {
-        Objects.requireNonNull(member, "member");
+        Validation.nonNull(member, "member");
         Holding h = invRepo.findById(holdingId)
                 .orElseThrow(() -> new NoSuchElementException("Holding not found: " + holdingId));
 
-        // Basic holding check
-        Validation.require(h.getStatus() == HoldingStatus.AVAILABLE, "Holding not available");
-
-        // Delegate all rule checking to the Policy Dispatcher
-        // The Dispatcher will find the correct rule (Book, DVD, etc.) and run its
-        // logic.
-        // This includes checking concurrent limits if the specific rule requires it.
         Validation.require(loanRule.canLoan(member, h), "Loan denied by policy (limit reached, fines, or blocked)");
 
         h.markOnLoan();
-        invRepo.update(h);
+        invRepo.save(h);
 
         LocalDate now = clock.today();
         LocalDate due = loanRule.dueDate(member, h, now);
@@ -95,8 +86,8 @@ public final class LoanService {
         LocalDate today = clock.today();
         loan.markReturned(today);
         h.markReturned();
-        invRepo.update(h);
-        loanRepo.update(loan);
+        invRepo.save(h);
+        loanRepo.save(loan);
 
         BigDecimal fine = finePolicy.fineFor(loan, today);
         if (fine.signum() > 0) {
@@ -145,7 +136,7 @@ public final class LoanService {
      * @throws NoSuchElementException if no copies are available
      */
     public Loan loanFirstAvailableCopy(UUID mediaId, Member member) {
-        Objects.requireNonNull(member, "member");
+        Validation.nonNull(member, "member");
         List<Holding> holdings = invRepo.findByMediaId(mediaId);
         Holding available = holdings.stream()
                 .filter(h -> h.getStatus() == HoldingStatus.AVAILABLE)

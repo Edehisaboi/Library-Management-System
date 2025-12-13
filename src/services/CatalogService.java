@@ -4,13 +4,14 @@ import domain.Query;
 import domain.inventory.Holding;
 import domain.inventory.HoldingStatus;
 import domain.media.MediaItem;
-import repo.InventoryRepository;
-import repo.MediaRepository;
+import infra.ConsoleView;
+import repo.*;
 import util.Validation;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,45 @@ public final class CatalogService {
     }
 
     /**
+     * Interactive search helper that prompts for a query, searches, and allows
+     * selecting an item.
+     * returns the selected item (or empty if cancelled/no results).
+     *
+     * @param view the console view to use for I/O
+     * @return Optional containing the selected MediaItem, or empty if none selected
+     */
+    public Optional<MediaItem> searchAndSelect(ConsoleView view) {
+        String query = view.promptString("Enter search query (title/creator or blank for all)", true);
+        Query q = new Query(query, query, null);
+        List<MediaItem> results = search(q);
+
+        if (results.isEmpty()) {
+            view.showMessage("No items found.");
+            view.pause();
+            return Optional.empty();
+        }
+
+        while (true) {
+            view.showMessage("\nFound " + results.size() + " items:");
+            for (int i = 0; i < results.size(); i++) {
+                MediaItem item = results.get(i);
+                int available = availableCount(item.getId());
+                view.showMessage((i + 1) + ". " + item.toString() + " | Available: " + available);
+            }
+
+            view.showMessage("0. Back");
+            int choice = view.promptInt("Select an item (or 0 to cancel)", 0, results.size());
+
+            if (choice == 0) {
+                return Optional.empty();
+            }
+
+            // Return the selected item
+            return Optional.of(results.get(choice - 1));
+        }
+    }
+
+    /**
      * Adds a new media title to the catalog and creates initial copies.
      *
      * @param item          the media item to add
@@ -51,17 +91,20 @@ public final class CatalogService {
     }
 
     /**
-     * Adds a single physical copy of an existing media title.
+     * Adds physical copies of an existing media title.
      *
      * @param mediaId the ID of the media item
-     * @return the newly created Holding
+     * @param count   number of copies to add
      * @throws NoSuchElementException if the media item does not exist
      */
-    public Holding addCopy(UUID mediaId) {
-        return mediaRepo.findById(mediaId)
-                .map(Holding::new)
-                .map(invRepo::save)
+    public void addCopies(UUID mediaId, int count) {
+        Validation.require(count > 0, "count must be > 0");
+        MediaItem item = mediaRepo.findById(mediaId)
                 .orElseThrow(() -> new NoSuchElementException("Media item not found: " + mediaId));
+
+        for (int i = 0; i < count; i++) {
+            invRepo.save(new Holding(item));
+        }
     }
 
     /**
@@ -120,7 +163,7 @@ public final class CatalogService {
         Holding h = invRepo.findById(holdingId)
                 .orElseThrow(() -> new NoSuchElementException("Holding not found: " + holdingId));
         h.markLost();
-        invRepo.update(h);
+        invRepo.save(h);
     }
 
     /**
@@ -132,6 +175,6 @@ public final class CatalogService {
         Holding h = invRepo.findById(holdingId)
                 .orElseThrow(() -> new NoSuchElementException("Holding not found: " + holdingId));
         h.markDamaged();
-        invRepo.update(h);
+        invRepo.save(h);
     }
 }
