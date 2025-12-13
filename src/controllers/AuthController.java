@@ -1,7 +1,6 @@
 package controllers;
 
-import authentication.Authenticator;
-import authentication.AuthException;
+import authentication.*;
 import authentication.session.UserSession;
 import infra.ConsoleView;
 

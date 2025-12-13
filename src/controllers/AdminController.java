@@ -1,18 +1,11 @@
 package controllers;
 
 import authentication.Authenticator;
-import domain.Category;
-import domain.media.Book;
-import domain.media.MediaItem;
-import domain.user.Librarian;
-import domain.user.Member;
-import domain.user.User;
+import domain.user.*;
 import infra.ConsoleView;
 import repo.UserRepository;
-import services.CatalogService;
-import services.LoanService;
+import services.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,7 +58,7 @@ public class AdminController {
             int choice = view.promptInt("Select an option", 1, 6);
             switch (choice) {
                 case 1 -> view.showMessage(librarian.toString());
-                case 2 -> searchCatalogLogic();
+                case 2 -> searchCatalog();
                 case 3 -> manageInventory();
                 case 4 -> manageUsers();
                 case 5 -> viewOverdueLoans();
@@ -78,16 +71,11 @@ public class AdminController {
     }
 
     // Handles the search catalog workflow for admins
-    private void searchCatalogLogic() {
-        String query = view.promptString("Enter search query (title/creator)");
-        var results = catalog.search(new domain.Query(query, query, null));
-        if (results.isEmpty()) {
-            view.showMessage("No items found.");
-        } else {
-            view.showMessage("Found " + results.size() + " items.");
-            results.forEach(item -> view.showMessage(item.toString()));
-        }
-        view.pause();
+    private void searchCatalog() {
+        catalog.searchAndSelect(view).ifPresent(item -> {
+            view.showMessage(item.details());
+            view.pause();
+        });
     }
 
     // Displays the inventory management menu and handles selection
@@ -96,90 +84,33 @@ public class AdminController {
             view.showMessage("""
 
                     ===== INVENTORY MANAGEMENT =====
-                    1. Add New Book
-                    2. Add Copy to Existing Title
-                    3. Back to Dashboard
+                    1. Add Copies to Existing Title
+                    2. Back to Dashboard
                     """);
 
-            int choice = view.promptInt("Select an option", 1, 3);
-            if (choice == 3)
+            int choice = view.promptInt("Select an option", 1, 2);
+            if (choice == 2)
                 return;
 
             if (choice == 1) {
-                addNewBook();
-            } else if (choice == 2) {
                 addCopyToExisting();
             }
         }
     }
 
-    // Guides the admin through creating a new book with all details
-    private void addNewBook() {
-        view.showMessage("\n--- Add New Book ---");
-        String title = view.promptString("Title");
-        String authorInput = view.promptString("Authors (comma separated)");
-        String publisher = view.promptString("Publisher");
-        String isbn = view.promptString("ISBN");
-        int year = view.promptInt("Year", 1000, 3000);
-        String catInput = view.promptString("Categories (comma separated, e.g. FICTION, HISTORY)");
-        int copies = view.promptInt("Initial Copies", 0, 100);
-
-        List<String> authors = Arrays.stream(authorInput.split(","))
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .collect(Collectors.toList());
-
-        var bookBuilder = Book.builder()
-                .title(title)
-                .publisher(publisher)
-                .year(year)
-                .isbn(isbn);
-
-        authors.forEach(bookBuilder::addAuthor);
-
-        // Parse category strings into enum values, ignoring invalid ones
-        for (String c : catInput.split(",")) {
-            try {
-                bookBuilder.addCategory(Category.valueOf(c.trim().toUpperCase()));
-            } catch (IllegalArgumentException e) {
-                view.showMessage("Warning: Invalid category '" + c + "' ignored.");
-            }
-        }
-
-        MediaItem newItem = bookBuilder.build();
-        catalog.addTitle(newItem, copies);
-        view.showMessage("Book added successfully!");
-        view.pause();
-    }
-
-    // Allows adding a physical copy to an existing title found by search
+    // Allows adding physical copies to an existing title found by search
     private void addCopyToExisting() {
         // Simple search to find the book first
-        String query = view.promptString("Enter title or ISBN to search");
-        var results = catalog.search(new domain.Query(query, null, null));
-
-        if (results.isEmpty()) {
-            view.showMessage("No items found.");
+        catalog.searchAndSelect(view).ifPresent(item -> {
+            int count = view.promptInt("Enter number of copies to add", 1, 100);
+            try {
+                catalog.addCopies(item.getId(), count);
+                view.showMessage("Successfully added " + count + " copies to: " + item.getTitle());
+            } catch (Exception e) {
+                view.showError("Failed to add copies: " + e.getMessage());
+            }
             view.pause();
-            return;
-        }
-
-        for (int i = 0; i < results.size(); i++) {
-            view.showMessage((i + 1) + ". " + results.get(i).toString());
-        }
-
-        int idx = view.promptInt("Select item to add copy to (0 to cancel)", 0, results.size());
-        if (idx == 0)
-            return;
-
-        MediaItem selected = results.get(idx - 1);
-        try {
-            catalog.addCopy(selected.getId());
-            view.showMessage("Copy added to: " + selected.getTitle());
-        } catch (Exception e) {
-            view.showError("Failed to add copy: " + e.getMessage());
-        }
-        view.pause();
+        });
     }
 
     // Lists all registered members and provides options to manage them

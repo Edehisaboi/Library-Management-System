@@ -1,13 +1,11 @@
 package controllers;
 
 import authentication.Authenticator;
-import domain.Query;
 import domain.loan.Loan;
 import domain.media.MediaItem;
 import domain.user.Member;
 import infra.ConsoleView;
-import services.CatalogService;
-import services.LoanService;
+import services.*;
 
 import java.util.List;
 
@@ -90,34 +88,7 @@ public class LibraryController {
 
     // Handles searching for items and borrowing them if a member is present
     private void searchCatalog(Member member) {
-        String query = view.promptString("Enter search query (title/creator or blank for all)", true);
-        Query q = new Query(query, query, null);
-        List<MediaItem> results = catalog.search(q);
-
-        if (results.isEmpty()) {
-            view.showMessage("No items found.");
-            view.pause();
-            return;
-        }
-
-        while (true) {
-            view.showMessage("\nFound " + results.size() + " items:");
-            for (int i = 0; i < results.size(); i++) {
-                MediaItem item = results.get(i);
-                int available = catalog.availableCount(item.getId());
-                view.showMessage((i + 1) + ". " + item.toString() + " | Available: " + available);
-            }
-
-            view.showMessage("0. Back to Dashboard");
-            int choice = view.promptInt("Select an item to view details (or 0 to cancel)", 0, results.size());
-
-            if (choice == 0) {
-                return;
-            }
-
-            MediaItem selected = results.get(choice - 1);
-            showItemDetails(selected, member);
-        }
+        catalog.searchAndSelect(view).ifPresent(item -> showItemDetails(item, member));
     }
 
     // Shows item details and offers borrowing options
