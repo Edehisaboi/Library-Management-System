@@ -1,4 +1,4 @@
-package infra;
+package infrastructure;
 
 /**
  * Singleton View class responsible for all console input and output.

@@ -1,4 +1,4 @@
-package infra;
+package infrastructure;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
