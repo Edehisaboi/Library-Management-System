@@ -5,7 +5,6 @@ import domain.user.Member;
 import util.Validation;
 
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -30,10 +29,10 @@ public final class Loan {
      */
     public Loan(Holding holding, Member borrower, LocalDate loanedOn, LocalDate dueOn) {
         this.id = UUID.randomUUID();
-        this.holding = Objects.requireNonNull(holding, "holding cannot be null");
-        this.borrower = Objects.requireNonNull(borrower, "borrower cannot be null");
-        this.loanedOn = Objects.requireNonNull(loanedOn, "loanedOn cannot be null");
-        this.dueOn = Objects.requireNonNull(dueOn, "dueOn cannot be null");
+        this.holding = Validation.nonNull(holding, "holding");
+        this.borrower = Validation.nonNull(borrower, "borrower");
+        this.loanedOn = Validation.nonNull(loanedOn, "loanedOn");
+        this.dueOn = Validation.nonNull(dueOn, "dueOn");
         Validation.require(!dueOn.isBefore(loanedOn), "dueOn must be on/after loanedOn");
     }
 
@@ -107,7 +106,7 @@ public final class Loan {
      */
     public void markReturned(LocalDate date) {
         Validation.require(!isReturned(), "Loan already returned");
-        this.returnedOn = Objects.requireNonNull(date, "return date cannot be null");
+        this.returnedOn = Validation.nonNull(date, "return date");
         Validation.require(!returnedOn.isBefore(loanedOn), "return date cannot be before loan date");
     }
 }

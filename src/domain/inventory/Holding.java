@@ -3,7 +3,6 @@ package domain.inventory;
 import domain.media.MediaItem;
 import util.Validation;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -34,7 +33,7 @@ public final class Holding {
      */
     public Holding(MediaItem item, String shelfLocation) {
         this.id = UUID.randomUUID();
-        this.item = Objects.requireNonNull(item, "item cannot be null");
+        this.item = Validation.nonNull(item, "item");
         this.status = HoldingStatus.AVAILABLE;
         this.shelfLocation = shelfLocation == null ? "" : shelfLocation.trim();
     }

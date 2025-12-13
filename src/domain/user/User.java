@@ -83,7 +83,7 @@ public abstract class User {
      * @param firstName the new first name
      */
     public void setFirstName(String firstName) {
-        this.firstName = Objects.requireNonNull(firstName, "New first name cannot be null!");
+        this.firstName = Validation.nonBlank(firstName, "firstName");
     }
 
     /**
@@ -92,7 +92,7 @@ public abstract class User {
      * @param lastName the new last name
      */
     public void setLastName(String lastName) {
-        this.lastName = Objects.requireNonNull(lastName, "New last name cannot be null!");
+        this.lastName = Validation.nonBlank(lastName, "lastName");
     }
 
     /**
