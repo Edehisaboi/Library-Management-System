@@ -1,32 +1,14 @@
 import authentication.Authenticator;
-import authentication.LibrarianAuth;
-import authentication.MemberAuth;
+import authentication.AuthFactory;
 import authentication.session.UserSession;
 import authentication.session.UserState;
-import controllers.AdminController;
-import controllers.AuthController;
-import controllers.LibraryController;
-import domain.media.Book;
-import domain.media.CD;
-import domain.media.DVD;
-import domain.user.Librarian;
-import domain.user.Member;
-import domain.user.User;
+import controllers.*;
+import domain.user.*;
 import policies.FinePolicy;
-import policies.rules.LoanDispatcher;
-import policies.LoanRule;
 import policies.fines.FlatFinePolicy;
-import policies.rules.BookLoanRule;
-import policies.rules.CDLoanRule;
-import policies.rules.DVDLoanRule;
-import repo.InventoryRepository;
-import repo.LoanRepository;
-import repo.MediaRepository;
-import repo.UserRepository;
-import repo.inmem.InMemoryInventoryRepository;
-import repo.inmem.InMemoryLoanRepository;
-import repo.inmem.InMemoryMediaRepository;
-import repo.inmem.InMemoryUserRepository;
+import policies.rules.StandardLoanRule;
+import repo.*;
+import repo.inmem.*;
 import services.CatalogService;
 import services.LoanService;
 import util.ClockProvider;
@@ -54,23 +36,12 @@ public class Main {
 
         // 2. Authentication & Session
         UserSession session = new UserState();
-        Authenticator memberAuth = new MemberAuth(userRepo, session);
-        Authenticator librarianAuth = new LibrarianAuth(userRepo, session);
+        Authenticator memberAuth = AuthFactory.createMemberAuth(userRepo, session);
+        Authenticator librarianAuth = AuthFactory.createLibrarianAuth(userRepo, session);
 
         // 3. Policies & Rules
-        // Create specific rules
-        // Book: 14 days loan, checks active loans vs member limit using loanRepo
-        LoanRule bookRule = new BookLoanRule(loanRepo, 14);
-        // DVD: 7 days loan, also checks limits
-        LoanRule dvdRule = new DVDLoanRule(loanRepo, 7);
-        // CD: 7 days loan, also checks limits
-        LoanRule cdRule = new CDLoanRule(loanRepo, 7);
-
-        // Create Dispatcher and register rules
-        LoanDispatcher loanDispatcher = new LoanDispatcher();
-        loanDispatcher.register(Book.class, bookRule);
-        loanDispatcher.register(DVD.class, dvdRule);
-        loanDispatcher.register(CD.class, cdRule);
+        // Single rule for all items: 7 days loan period
+        StandardLoanRule loanRule = new StandardLoanRule(loanRepo, 7);
 
         java.math.BigDecimal perDay = new java.math.BigDecimal("0.50");
         FinePolicy finePolicy = new FlatFinePolicy(perDay, 0);
@@ -78,7 +49,7 @@ public class Main {
 
         // 4. Services
         CatalogService catalog = new CatalogService(mediaRepo, invRepo);
-        LoanService loanService = new LoanService(invRepo, loanRepo, loanDispatcher, finePolicy, clock);
+        LoanService loanService = new LoanService(invRepo, loanRepo, loanRule, finePolicy, clock);
 
         // 5. Load Initial Data
         new LoadMedia(catalog).loadBooks("src/lib/book_metadata.csv", true);
