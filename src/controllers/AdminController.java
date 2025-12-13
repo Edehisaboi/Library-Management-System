@@ -2,12 +2,11 @@ package controllers;
 
 import authentication.Authenticator;
 import domain.user.*;
-import infra.ConsoleView;
+import infrastructure.ConsoleView;
 import repo.UserRepository;
 import services.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Controller for Librarian-specific actions.
@@ -102,7 +101,7 @@ public class AdminController {
     private void addCopyToExisting() {
         // Simple search to find the book first
         catalog.searchAndSelect(view).ifPresent(item -> {
-            int count = view.promptInt("Enter number of copies to add", 1, 100);
+            int count = view.promptInt("Enter number of copies to add", 1, 50);
             try {
                 catalog.addCopies(item.getId(), count);
                 view.showMessage("Successfully added " + count + " copies to: " + item.getTitle());
@@ -120,7 +119,7 @@ public class AdminController {
         List<Member> members = users.stream()
                 .filter(u -> u instanceof Member)
                 .map(u -> (Member) u)
-                .collect(Collectors.toList());
+                .toList();
 
         if (members.isEmpty()) {
             view.showMessage("No registered members found.");

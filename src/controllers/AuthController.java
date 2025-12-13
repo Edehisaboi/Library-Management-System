@@ -2,7 +2,7 @@ package controllers;
 
 import authentication.*;
 import authentication.session.UserSession;
-import infra.ConsoleView;
+import infrastructure.ConsoleView;
 
 /**
  * Controller for handling User Authentication flows.

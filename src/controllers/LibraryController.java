@@ -4,7 +4,7 @@ import authentication.Authenticator;
 import domain.loan.Loan;
 import domain.media.MediaItem;
 import domain.user.Member;
-import infra.ConsoleView;
+import infrastructure.ConsoleView;
 import services.*;
 
 import java.util.List;
@@ -98,7 +98,7 @@ public class LibraryController {
             view.showMessage(item.details());
 
             view.showMessage("\n1. Borrow this item");
-            view.showMessage("2. Back to List");
+            view.showMessage("2. Cancel");
 
             int choice = view.promptInt("Select an option", 1, 2);
             if (choice == 2)
