@@ -139,4 +139,11 @@ public final class Member extends User {
     public String role() {
         return "MEMBER";
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "\n"
+                + "Membership Expiry: " + membershipExpiry + "\n"
+                + "Outstanding Fines: " + outstandingFines;
+    }
 }
