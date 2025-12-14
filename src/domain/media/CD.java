@@ -10,8 +10,8 @@ import java.util.Set;
  * Represents a Music CD (Compact Disc) in the library.
  */
 public class CD extends MediaItem {
-    private final int durationMinutes;
-    private final int trackCount;
+    private int durationMinutes;
+    private int trackCount;
 
     /**
      * Creates a new CD.
@@ -26,10 +26,8 @@ public class CD extends MediaItem {
     public CD(String title, List<String> artists, int year, Set<Category> categories, int durationMinutes,
             int trackCount) {
         super(title, artists, year, categories);
-        Validation.require(durationMinutes >= 1, "durationMinutes must be >= 1");
-        Validation.require(trackCount >= 1, "trackCount must be >= 1");
-        this.durationMinutes = durationMinutes;
-        this.trackCount = trackCount;
+        setDurationMinutes(durationMinutes);
+        setTrackCount(trackCount);
     }
 
     /**
@@ -42,12 +40,32 @@ public class CD extends MediaItem {
     }
 
     /**
+     * Sets the duration in minutes.
+     * 
+     * @param durationMinutes duration in minutes
+     */
+    public void setDurationMinutes(int durationMinutes) {
+        Validation.require(durationMinutes >= 1, "durationMinutes must be >= 1");
+        this.durationMinutes = durationMinutes;
+    }
+
+    /**
      * Gets the number of tracks.
      * 
      * @return track count
      */
     public int getTrackCount() {
         return trackCount;
+    }
+
+    /**
+     * Sets the number of tracks.
+     * 
+     * @param trackCount number of tracks
+     */
+    public void setTrackCount(int trackCount) {
+        Validation.require(trackCount >= 1, "trackCount must be >= 1");
+        this.trackCount = trackCount;
     }
 
     @Override

@@ -16,10 +16,10 @@ import java.util.Objects;
  */
 public abstract class MediaItem {
     private final UUID id;
-    private final String title;
-    private final List<String> creators;
-    private final int year;
-    private final Set<Category> categories;
+    private String title;
+    private List<String> creators;
+    private int year;
+    private Set<Category> categories;
 
     /**
      * Initializes a new MediaItem.
@@ -31,11 +31,10 @@ public abstract class MediaItem {
      */
     protected MediaItem(String title, List<String> creators, int year, Set<Category> categories) {
         this.id = UUID.randomUUID();
-        this.title = Validation.nonBlank(title, "title");
-        this.creators = List.copyOf(Validation.nonNull(creators, "creators"));
-        Validation.require(year > 0, "year must be greater than 0");
-        this.year = year;
-        this.categories = Set.copyOf(Validation.nonNull(categories, "categories"));
+        setTitle(title);
+        setCreators(creators);
+        setYear(year);
+        setCategories(categories);
     }
 
     /**
@@ -57,12 +56,30 @@ public abstract class MediaItem {
     }
 
     /**
+     * Sets the title of the media item.
+     * 
+     * @param title the new title
+     */
+    public void setTitle(String title) {
+        this.title = Validation.nonBlank(title, "title");
+    }
+
+    /**
      * Gets the list of creators (authors, artists, etc.).
      * 
      * @return an immutable list of creators
      */
     public List<String> getCreators() {
         return creators;
+    }
+
+    /**
+     * Sets the list of creators.
+     * 
+     * @param creators list of creators
+     */
+    public void setCreators(List<String> creators) {
+        this.creators = List.copyOf(Validation.nonNull(creators, "creators"));
     }
 
     /**
@@ -75,12 +92,31 @@ public abstract class MediaItem {
     }
 
     /**
+     * Sets the release year.
+     * 
+     * @param year the release year
+     */
+    public void setYear(int year) {
+        Validation.require(year > 0, "year must be greater than 0");
+        this.year = year;
+    }
+
+    /**
      * Gets the set of categories associated with this item.
      * 
      * @return an immutable set of categories
      */
     public Set<Category> getCategories() {
         return categories;
+    }
+
+    /**
+     * Sets the categories for this item.
+     * 
+     * @param categories set of categories
+     */
+    public void setCategories(Set<Category> categories) {
+        this.categories = Set.copyOf(Validation.nonNull(categories, "categories"));
     }
 
     /**

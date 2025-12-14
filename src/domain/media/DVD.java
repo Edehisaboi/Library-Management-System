@@ -10,9 +10,9 @@ import java.util.Set;
  * Represents a DVD (Movie or TV Show) in the library.
  */
 public final class DVD extends MediaItem {
-    private final int durationMinutes;
-    private final String regionCode;
-    private final String rating;
+    private int durationMinutes;
+    private String regionCode;
+    private String rating;
 
     /**
      * Creates a new DVD.
@@ -28,10 +28,9 @@ public final class DVD extends MediaItem {
     public DVD(String title, List<String> directors, int year, Set<Category> categories,
             int durationMinutes, String regionCode, String rating) {
         super(title, directors, year, categories);
-        Validation.require(durationMinutes >= 1, "durationMinutes must be >= 1");
-        this.durationMinutes = durationMinutes;
-        this.regionCode = regionCode == null ? "" : regionCode.trim();
-        this.rating = rating == null ? "" : rating.trim();
+        setDurationMinutes(durationMinutes);
+        setRegionCode(regionCode);
+        setRating(rating);
     }
 
     /**
@@ -44,6 +43,16 @@ public final class DVD extends MediaItem {
     }
 
     /**
+     * Sets the duration in minutes.
+     * 
+     * @param durationMinutes duration in minutes
+     */
+    public void setDurationMinutes(int durationMinutes) {
+        Validation.require(durationMinutes >= 1, "durationMinutes must be >= 1");
+        this.durationMinutes = durationMinutes;
+    }
+
+    /**
      * Gets the DVD region code.
      * 
      * @return region code
@@ -53,12 +62,30 @@ public final class DVD extends MediaItem {
     }
 
     /**
+     * Sets the region code.
+     * 
+     * @param regionCode region code
+     */
+    public void setRegionCode(String regionCode) {
+        this.regionCode = regionCode == null ? "" : regionCode.trim();
+    }
+
+    /**
      * Gets the content rating (e.g. PG-13).
      * 
      * @return rating string
      */
     public String getRating() {
         return rating;
+    }
+
+    /**
+     * Sets the rating.
+     * 
+     * @param rating rating string
+     */
+    public void setRating(String rating) {
+        this.rating = rating == null ? "" : rating.trim();
     }
 
     @Override

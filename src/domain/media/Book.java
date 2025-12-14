@@ -10,8 +10,8 @@ import java.util.Set;
  * Represents a Book in the library catalog.
  */
 public final class Book extends MediaItem {
-    private final String isbn;
-    private final String publisher;
+    private String isbn;
+    private String publisher;
 
     /**
      * Creates a new Book instance.
@@ -48,12 +48,30 @@ public final class Book extends MediaItem {
     }
 
     /**
+     * Sets the ISBN of the book.
+     * 
+     * @param isbn the new ISBN
+     */
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    /**
      * Gets the publisher of the book.
      * 
      * @return the publisher name
      */
     public String getPublisher() {
         return publisher;
+    }
+
+    /**
+     * Sets the publisher of the book.
+     * 
+     * @param publisher the new publisher name
+     */
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
     }
 
     @Override
