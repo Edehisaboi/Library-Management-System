@@ -17,7 +17,10 @@ public final class InMemoryInventoryRepository implements InventoryRepository {
     @Override
     public Holding save(Holding h) {
         store.put(h.getId(), h);
-        byMedia.computeIfAbsent(h.getItem().getId(), k -> new ArrayList<>()).add(h.getId());
+        List<UUID> ids = byMedia.computeIfAbsent(h.getItem().getId(), k -> new ArrayList<>());
+        if (!ids.contains(h.getId())) {
+            ids.add(h.getId());
+        }
         return h;
     }
 
