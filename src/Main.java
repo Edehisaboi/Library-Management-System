@@ -52,8 +52,10 @@ public class Main {
         LoanService loanService = new LoanService(invRepo, loanRepo, loanRule, finePolicy, clock);
 
         // 5. Load Initial Data
-        new LoadMedia(catalog).loadBooks("src/lib/book_metadata.csv", true);
-        new LoadMedia(catalog).loadCDs("src/lib/cd_metadata.csv", true);
+        LoadMedia loader = new LoadMedia(catalog);
+        loader.loadBooks("src/lib/book_metadata.csv", true);
+        loader.loadCDs("src/lib/cd_metadata.csv", true);
+        loader.loadDVDs("src/lib/dvd_metadata.csv", true);
 
         // 6. Controllers
         AuthController authController = new AuthController(memberAuth, librarianAuth, session);
