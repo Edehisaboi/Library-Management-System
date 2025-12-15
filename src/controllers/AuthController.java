@@ -34,6 +34,7 @@ public class AuthController {
      * Loops until a user is logged in or the application exits.
      */
     public void processAuth() {
+        // Continue loop until a valid session is established
         while (!session.isLoggedIn()) {
             view.showMessage("""
 
@@ -47,6 +48,7 @@ public class AuthController {
                     """);
 
             int choice = view.promptInt("Select an option", 1, 6);
+            // Route based on user selection
             switch (choice) {
                 case 1 -> login(memberAuth, "Member");
                 case 2 -> login(librarianAuth, "Librarian");
@@ -56,6 +58,7 @@ public class AuthController {
                     return; // Proceed as Guest (Main will handle this if not logged in)
                 }
                 case 6 -> {
+                    // Graceful shutdown
                     view.showMessage("Goodbye!");
                     System.exit(0);
                 }
@@ -63,35 +66,55 @@ public class AuthController {
         }
     }
 
-    // Handles the login flow for a specific user role
+    /**
+     * Handles the login flow for a specific user role.
+     * Prompts for credentials and attempts to authenticate via the provided
+     * Authenticator.
+     *
+     * @param auth the authenticator strategy to use (Member vs Librarian)
+     * @param role the name of the role for display purposes
+     */
     private void login(Authenticator auth, String role) {
         view.showMessage("\n=== " + role.toUpperCase() + " LOGIN ===");
+
+        // Collect credentials
         String email = view.promptString("Enter email");
         String password = view.promptString("Enter password");
 
         try {
+            // Attempt login - throws AuthException on failure
             auth.login(email, password);
             view.showMessage("Logged in successfully!");
         } catch (AuthException e) {
+            // Handle known authentication errors (invalid pass, not found, etc.)
             view.showError("Login failed, " + e.getMessage());
             view.pause();
         }
     }
 
-    // Handles the registration flow for a new user
+    /**
+     * Handles the registration flow for a new user.
+     * Collects personal details and creates a new account.
+     *
+     * @param auth the authenticator strategy to use
+     * @param role the role being registered
+     */
     private void register(Authenticator auth, String role) {
         view.showMessage("\n=== " + role.toUpperCase() + " REGISTRATION ===");
 
-        // Strict validation for new accounts
+        // Strict validation for new accounts inputs
         String firstName = view.promptName("Enter first name");
         String lastName = view.promptName("Enter last name");
         String email = view.promptEmail("Enter email");
+        // Enforce minimum password complexity (length only in this case)
         String password = view.promptString("Enter password (min 8 chars)", "MIN", 8);
 
         try {
+            // Attempt to create the user account
             auth.register(firstName, lastName, email, password);
             view.showMessage("Account created! You can now login.");
         } catch (AuthException e) {
+            // Handle registration errors (e.g., email already exists)
             view.showError("Registration failed, " + e.getMessage());
         }
         view.pause();
